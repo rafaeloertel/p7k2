@@ -750,7 +750,7 @@ body:not(.gated)::before{display:none}
 /* Hub — núcleo: utilitários, armazenamento (local + Supabase), login Microsoft, shell, rotas, modais */
 (function () {
   "use strict";
-  const ERP = (window.ERP = { version: "v0.13.0", modules: [], defaults: {}, cfg: {} });
+  const ERP = (window.ERP = { version: "v0.13.1", modules: [], defaults: {}, cfg: {} });
 
   /* ---------- utilitários ---------- */
   const $ = (s, r) => (r || document).querySelector(s);
@@ -1705,6 +1705,12 @@ body:not(.gated)::before{display:none}
   "use strict";
   const { $, $$, esc, uid, todayISO, fdate, Store } = ERP;
   ERP.defaults.reminders = { lists: [], tasks: [], seq: 0 };
+  /* lista criada na hora, de dentro do formulário da tarefa */
+  ERP.creators.lista = (nome) => {
+    nome = nome.trim(); const d = Store.get("reminders"); const ja = d.lists.find((l) => l.name.toLowerCase() === nome.toLowerCase()); if (ja) return ja.id;
+    const id = uid("l"); Store.change("reminders", (dd) => { dd.lists.push({ id, name: nome, color: (typeof COLORS !== "undefined" && COLORS[dd.lists.length % COLORS.length]) || "#0F1E3A", order: dd.lists.length + 1 }); });
+    ERP.toast(`Lista "${nome}" criada.`); return id;
+  };
 
   const ST = [["todo", "A Fazer"], ["doing", "Em Andamento"], ["wait", "Aguardando"], ["block", "Bloqueado"], ["done", "Concluído"]];
   const STN = Object.fromEntries(ST);
@@ -1760,7 +1766,7 @@ body:not(.gated)::before{display:none}
       title: `${t.key} · Editar demanda`, wide: true,
       fields: [
         { k: "title", label: "Título", value: t.title, full: true, required: true },
-        { k: "listId", label: "Lista", type: "select", value: t.listId, options: d.lists.map((l) => [l.id, l.name]) },
+        { k: "listId", label: "Lista", type: "select", creatable: "lista", value: t.listId, options: d.lists.map((l) => [l.id, l.name]) },
         { k: "status", label: "Status", type: "select", value: t.status, options: ST },
         { k: "priority", label: "Prioridade", type: "select", value: t.priority, options: PR },
         { k: "owner", label: "Responsável", value: t.owner },
@@ -2332,6 +2338,13 @@ body:not(.gated)::before{display:none}
   const star = (k, id) => `<button type="button" class="star${FAV.has(k, id) ? " on" : ""}" data-star="${k}|${id}" title="${FAV.has(k, id) ? "Tirar dos favoritos" : "Acompanhar (favorito)"}">${FAV.has(k, id) ? "★" : "☆"}</button>`;
   const bindStars = (root) => $$("[data-star]", root).forEach((b) => (b.onclick = (e) => { e.stopPropagation(); const [k, id] = b.dataset.star.split("|"); FAV.toggle(k, id); ERP.render(); }));
   const centroOpts = () => [["", "—"]].concat((D().centros || []).slice().sort((a, b) => a.localeCompare(b, "pt-BR")).map((x) => [x, x]));
+  /* conta criada na hora, de dentro de qualquer formulário (corrente por padrão; saldo inicial e detalhes em Cadastros › Contas) */
+  ERP.creators.conta = (nome) => {
+    nome = (ERP.tcPt || ((x) => x))(nome.trim()); const ja = D().contas.find((c) => c.nome.toLowerCase() === nome.toLowerCase()); if (ja) return ja.id;
+    const id = uid("ct"); Store.change("financas", (dd) => { dd.contas.push({ id, nome, tipo: "corrente", banco: "", saldoIni: 0, dataIni: todayISO(), limite: 0, jurosCheque: 8, ativa: true }); });
+    ERP.toast(`Conta "${nome}" cadastrada. Saldo inicial e detalhes em Cadastros › Contas.`); return id;
+  };
+  ERP.creators.origem = (nome) => "ct:" + ERP.creators.conta(nome);
   ERP.creators.centro = (nome) => { nome = (ERP.tcPt || ((x)=>x))(nome.trim()); const ja = (D().centros || []).find((x) => x.toLowerCase() === nome.toLowerCase()); if (ja) return ja; Store.change("financas", (dd) => { dd.centros = (dd.centros || []).concat(nome); }); ERP.toast(`Centro de custo "${nome}" cadastrado.`); return nome; };
   const origemOpts = (comCartao) => F.contasAtivas().map((c) => ["ct:" + c.id, "🏦 " + c.nome]).concat(comCartao ? D().cartoes.filter((c) => c.ativo !== false).map((c) => ["cc:" + c.id, "💳 " + c.nome]) : []);
   const regimeTgl = () => `<div class="tabs fin-tgl" role="group" aria-label="Regime"><button class="${D().cfg.regime === "caixa" ? "on" : ""}" data-reg="caixa" title="Quando o dinheiro entra e sai da conta">Caixa</button><button class="${D().cfg.regime === "competencia" ? "on" : ""}" data-reg="competencia" title="Quando a despesa acontece (compra no cartão conta na data da compra; inclui previstos)">Competência</button>${ERP.help("competencia")}</div>`;
@@ -2370,8 +2383,8 @@ body:not(.gated)::before{display:none}
       { k: "favId", label: "Favorecido", type: "select", creatable: "favorecido", value: l.favId || "", options: favOpts(), hint: "Quem recebe (Enel, Netflix, academia…). Escolher preenche categoria, forma, centro, moeda e o último valor." },
       { k: "desc", label: "Descrição", value: l.desc, full: true, required: true, placeholder: "Ex.: Mercado, Aluguel, Salário" },
       { k: "catId", label: "Categoria", type: "select", creatable: "categoria", value: l.catId, options: catOpts("despesa") },
-      { k: "origem", label: "Pago com / Recebido em", type: "select", value: origem, options: origemOpts(true) },
-      { k: "paraId", label: "Para a Conta", type: "select", value: l.paraId || "", options: F.contasAtivas().map((c) => [c.id, c.nome]) },
+      { k: "origem", label: "Pago com / Recebido em", type: "select", creatable: "origem", value: origem, options: origemOpts(true) },
+      { k: "paraId", label: "Para a Conta", type: "select", creatable: "conta", value: l.paraId || "", options: F.contasAtivas().map((c) => [c.id, c.nome]) },
       { k: "forma", label: "Forma de Pagamento", type: "select", creatable: "forma", value: l.forma || "", options: formaOpts() },
       { k: "classe", label: "Classificação", type: "select", value: l.classe || "", options: [["", "Pela Categoria", "Usa a natureza da categoria (necessidades, estilo de vida, financeiro, investimento)."]].concat(F.CLASSES.map((x) => [x[0], x[1], x[3]])), hint: l.classe && F.CLS_DESC[l.classe] ? F.CLS_DESC[l.classe] : "Usa a natureza da categoria. Só Fixo e Variável sugerem recorrência." },
       { k: "centro", label: "Centro de Custo", type: "select", creatable: "centro", value: l.centro || "", options: centroOpts(), hint: "Para separar os gastos por área, projeto ou pessoa (ex.: Casa, Carro, NMB). Digite para buscar ou cadastrar um novo." },
@@ -2530,7 +2543,7 @@ body:not(.gated)::before{display:none}
       title: (rec ? "Receber · " : "Pagar · ") + l.desc, intro: `Valor previsto ${brl(l.valor)} · vencimento ${fdate(l.venc)}`,
       fields: [
         { k: "data", label: rec ? "Data do recebimento" : "Data do Pagamento", type: "date", value: todayISO() },
-        { k: "contaId", label: rec ? "Recebido na conta" : "Pago pela conta", type: "select", value: l.contaId, options: F.contasAtivas().map((c) => [c.id, c.nome]) },
+        { k: "contaId", label: rec ? "Recebido na conta" : "Pago pela conta", type: "select", creatable: "conta", value: l.contaId, options: F.contasAtivas().map((c) => [c.id, c.nome]) },
         { k: "juros", label: rec ? "Acréscimos" : "Juros e multa", type: "number", step: "0.01", value: 0 },
         { k: "desconto", label: "Desconto", type: "number", step: "0.01", value: 0 },
       ],
@@ -2741,7 +2754,7 @@ body:not(.gated)::before{display:none}
         { k: "rest", label: "Parcelas Restantes", type: "number", step: "1", value: inf ? inf.rest : "" },
         { k: "prox", label: "Próximo Vencimento", type: "date", value: inf && inf.proxima ? inf.proxima.venc : F.diaNoMes(F.mesSeg(monthKey(todayISO()), 1), dv.dia) },
         { k: "taxa", label: "Juros (% ao mês)", type: "number", step: "0.01", value: dv.taxa, hint: "Usado no saldo devedor e no plano de quitação" },
-        { k: "contaId", label: "Paga pela Conta", type: "select", value: dv.contaId, options: F.contasAtivas().map((c) => [c.id, c.nome]) },
+        { k: "contaId", label: "Paga pela Conta", type: "select", creatable: "conta", value: dv.contaId, options: F.contasAtivas().map((c) => [c.id, c.nome]) },
         { k: "obs", label: "Observação", value: dv.obs, full: true },
       ],
       onSubmit(v) {
@@ -2818,7 +2831,7 @@ body:not(.gated)::before{display:none}
     const metaForm = (m) => { const nova = !m; m = m || { guardado: 0 }; ERP.form({ title: nova ? "Nova Meta" : "Editar meta", fields: [{ k: "nome", label: "Nome", value: m.nome, required: true, full: true }, { k: "alvo", label: "Valor Alvo (R$)", type: "number", step: "0.01", value: m.alvo }, { k: "guardado", label: "Já Guardado (R$)", type: "number", step: "0.01", value: m.guardado }, { k: "prazo", label: "Prazo", type: "date", value: m.prazo }, { k: "reserva", label: "É a reserva de emergência", type: "checkbox", value: m.reserva }], onSubmit(v) { Store.change("financas", (dd) => { if (nova) dd.metas.push(Object.assign({ id: uid("mt"), hist: [] }, v)); else Object.assign(dd.metas.find((x) => x.id === m.id), v); }); ERP.render(); }, onDelete: nova ? null : () => { Store.change("financas", (dd) => { dd.metas = dd.metas.filter((x) => x.id !== m.id); }); ERP.render(); } }); };
     $("#mNova", root).onclick = () => metaForm();
     $$("[data-me]", root).forEach((b) => (b.onclick = () => metaForm(d.metas.find((x) => x.id === b.dataset.me))));
-    $$("[data-ap]", root).forEach((b) => (b.onclick = () => { const m = d.metas.find((x) => x.id === b.dataset.ap); ERP.form({ title: "Guardar em " + m.nome, intro: "Opcional: lance também a saída da conta como aporte (categoria Investimentos e reservas).", fields: [{ k: "valor", label: "Valor (R$)", type: "number", step: "0.01" }, { k: "lanc", label: "Lançar como despesa de aporte", type: "checkbox", value: true }, { k: "contaId", label: "Saiu da Conta", type: "select", options: F.contasAtivas().map((c2) => [c2.id, c2.nome]) }], onSubmit(v) { if (!v.valor) return false; salvar((dd) => { const x = dd.metas.find((y) => y.id === m.id); x.guardado = F.r2((+x.guardado || 0) + v.valor); (x.hist = x.hist || []).push({ em: todayISO(), v: v.valor }); if (v.lanc) { const cid = (dd.categorias.find((c2) => c2.natureza === "investimento" && (m.reserva ? /reserva/i.test(c2.nome) : /aporte/i.test(c2.nome))) || {}).id; dd.lanc.push({ id: uid("l"), tipo: "despesa", desc: "Aporte · " + m.nome, catId: cid, valor: F.r2(v.valor), contaId: v.contaId, comp: todayISO(), venc: todayISO(), pago: todayISO(), valorPago: F.r2(v.valor), hist: [{ em: new Date().toISOString(), o: "Aporte na meta" }] }); } }); ERP.render(); } }); }));
+    $$("[data-ap]", root).forEach((b) => (b.onclick = () => { const m = d.metas.find((x) => x.id === b.dataset.ap); ERP.form({ title: "Guardar em " + m.nome, intro: "Opcional: lance também a saída da conta como aporte (categoria Investimentos e reservas).", fields: [{ k: "valor", label: "Valor (R$)", type: "number", step: "0.01" }, { k: "lanc", label: "Lançar como despesa de aporte", type: "checkbox", value: true }, { k: "contaId", label: "Saiu da Conta", type: "select", creatable: "conta", options: F.contasAtivas().map((c2) => [c2.id, c2.nome]) }], onSubmit(v) { if (!v.valor) return false; salvar((dd) => { const x = dd.metas.find((y) => y.id === m.id); x.guardado = F.r2((+x.guardado || 0) + v.valor); (x.hist = x.hist || []).push({ em: todayISO(), v: v.valor }); if (v.lanc) { const cid = (dd.categorias.find((c2) => c2.natureza === "investimento" && (m.reserva ? /reserva/i.test(c2.nome) : /aporte/i.test(c2.nome))) || {}).id; dd.lanc.push({ id: uid("l"), tipo: "despesa", desc: "Aporte · " + m.nome, catId: cid, valor: F.r2(v.valor), contaId: v.contaId, comp: todayISO(), venc: todayISO(), pago: todayISO(), valorPago: F.r2(v.valor), hist: [{ em: new Date().toISOString(), o: "Aporte na meta" }] }); } }); ERP.render(); } }); }));
     $("#mApo", root).onclick = () => ERP.form({ title: "Premissas do Planejamento", fields: [{ k: "idade", label: "Idade Hoje", type: "number", value: c.idade }, { k: "idadeApos", label: "Idade para se Aposentar", type: "number", value: c.idadeApos }, { k: "rendaDesejada", label: "Renda Mensal Desejada (R$ de hoje)", type: "number", step: "100", value: c.rendaDesejada }, { k: "retornoReal", label: "Retorno Real (% a.a., acima da inflação)", type: "number", step: "0.1", value: c.retornoReal }, { k: "aporteApos", label: "Aporte Mensal Atual (R$)", type: "number", step: "100", value: c.aporteApos }, { k: "reservaMeses", label: "Meses de Reserva de Emergência", type: "number", value: c.reservaMeses }], onSubmit(v) { Store.change("financas", (dd) => Object.assign(dd.cfg, v)); ERP.render(); } });
   }
 
@@ -2882,7 +2895,7 @@ body:not(.gated)::before{display:none}
       <div class="card"><h3>Centros de Custo</h3><p class="mut" style="margin-bottom:8px">Para separar os gastos por área, projeto ou pessoa (ex.: Casa, Carro, NMB). Clique para renomear ou remover.</p>${(d.centros && d.centros.length) ? `<div class="chips">${d.centros.slice().sort((a, b) => a.localeCompare(b, "pt-BR")).map((x) => `<button class="chip-cc" data-cc-ed="${esc(x)}">${esc(x)}</button>`).join("")}</div>` : `<p class="mut">Nenhum centro cadastrado ainda.</p>`}<div class="toolbar" style="margin-top:10px"><button class="btn ghost sm" data-cc-novo>+ Centro de custo</button></div></div>
       <div class="card"><h3>Fechamento do Mês</h3><p class="mut" style="margin-bottom:8px">Depois de conferir com o extrato, feche o mês: lançamentos do mês fechado não podem ser alterados nem excluídos até reabrir (com motivo).</p><div class="tw"><table><tbody>${meses.map((mk) => { const f = d.fechados[mk]; return `<tr><td><b>${monthLabel(mk)}</b></td><td>${f ? `<span class="pill ok">fechado em ${fdate(f.em.slice(0, 10))}</span>` : '<span class="pill">aberto</span>'}</td><td class="mut">${f ? "saldo das contas: " + brl(f.saldo) : ""}</td><td class="r">${f ? `<button class="btn ghost sm" data-reab="${mk}">Reabrir</button>` : mk < monthKey(todayISO()) ? `<button class="btn sm" data-fech="${mk}">Fechar</button>` : ""}</td></tr>`; }).join("")}</tbody></table></div></div>`;
     const contaF = (c) => ERP.form({ title: c ? "Editar Conta" : "Nova Conta", fields: [{ k: "nome", label: "Nome", value: c && c.nome, required: true }, { k: "banco", label: "Banco", value: c && c.banco }, { k: "tipo", label: "Tipo", type: "select", value: c && c.tipo, options: TIPOS }, { k: "saldoIni", label: "Saldo Inicial (R$, negativo com −)", type: "number", step: "0.01", value: c ? c.saldoIni : 0 }, { k: "dataIni", label: "Saldo na Data", type: "date", value: c ? c.dataIni : todayISO() }, { k: "limite", label: "Limite do Cheque Especial (R$)", type: "number", step: "0.01", value: c ? c.limite : 0 }, { k: "jurosCheque", label: "Juros do Cheque Especial (% a.m.)", type: "number", step: "0.01", value: c ? c.jurosCheque : 8 }, { k: "ativa", label: "Ativa", type: "checkbox", value: c ? c.ativa !== false : true }], onSubmit(v) { Store.change("financas", (dd) => { if (c) Object.assign(dd.contas.find((x) => x.id === c.id), v); else dd.contas.push(Object.assign({ id: uid("ct") }, v)); }); ERP.render(); }, onDelete: c ? () => { if (d.lanc.some((l) => l.contaId === c.id || l.paraId === c.id)) { ERP.toast("A conta tem lançamentos: marque como inativa."); return; } Store.change("financas", (dd) => { dd.contas = dd.contas.filter((x) => x.id !== c.id); }); ERP.render(); } : null });
-    const cartaoF = (c) => ERP.form({ title: c ? "Editar Cartão" : "Novo Cartão", fields: [{ k: "nome", label: "Nome", value: c && c.nome, required: true, placeholder: "Ex.: Visa Santander 8038" }, { k: "limite", label: "Limite (R$)", type: "number", step: "0.01", value: c ? c.limite : 0 }, { k: "fecha", label: "Dia do Fechamento", type: "number", value: c ? c.fecha : 1 }, { k: "vence", label: "Dia do Vencimento", type: "number", value: c ? c.vence : 10 }, { k: "contaId", label: "Fatura Paga pela Conta", type: "select", value: c && c.contaId, options: F.contasAtivas().map((x) => [x.id, x.nome]) }], onSubmit(v) { if (!(v.fecha >= 1 && v.fecha <= 31 && v.vence >= 1 && v.vence <= 31)) { ERP.toast("Dias entre 1 e 31."); return false; } Store.change("financas", (dd) => { if (c) Object.assign(dd.cartoes.find((x) => x.id === c.id), v); else dd.cartoes.push(Object.assign({ id: uid("cc") }, v)); }); ERP.render(); }, onDelete: c ? () => { if (d.lanc.some((l) => l.cartaoId === c.id)) { ERP.toast("O cartão tem compras: não pode ser excluído."); return; } Store.change("financas", (dd) => { dd.cartoes = dd.cartoes.filter((x) => x.id !== c.id); }); ERP.render(); } : null });
+    const cartaoF = (c) => ERP.form({ title: c ? "Editar Cartão" : "Novo Cartão", fields: [{ k: "nome", label: "Nome", value: c && c.nome, required: true, placeholder: "Ex.: Visa Santander 8038" }, { k: "limite", label: "Limite (R$)", type: "number", step: "0.01", value: c ? c.limite : 0 }, { k: "fecha", label: "Dia do Fechamento", type: "number", value: c ? c.fecha : 1 }, { k: "vence", label: "Dia do Vencimento", type: "number", value: c ? c.vence : 10 }, { k: "contaId", label: "Fatura Paga pela Conta", type: "select", creatable: "conta", value: c && c.contaId, options: F.contasAtivas().map((x) => [x.id, x.nome]) }], onSubmit(v) { if (!(v.fecha >= 1 && v.fecha <= 31 && v.vence >= 1 && v.vence <= 31)) { ERP.toast("Dias entre 1 e 31."); return false; } Store.change("financas", (dd) => { if (c) Object.assign(dd.cartoes.find((x) => x.id === c.id), v); else dd.cartoes.push(Object.assign({ id: uid("cc") }, v)); }); ERP.render(); }, onDelete: c ? () => { if (d.lanc.some((l) => l.cartaoId === c.id)) { ERP.toast("O cartão tem compras: não pode ser excluído."); return; } Store.change("financas", (dd) => { dd.cartoes = dd.cartoes.filter((x) => x.id !== c.id); }); ERP.render(); } : null });
     const catF = (c) => ERP.form({ title: c ? "Editar Categoria" : "Nova Categoria", fields: [{ k: "nome", label: "Nome", value: c && c.nome, required: true }, { k: "grupo", label: "Grupo", value: c ? c.grupo : "", placeholder: "Ex.: Moradia" }, { k: "natureza", label: "Natureza", type: "select", value: c ? c.natureza : "estilo", options: Object.entries(F.NAT) }, { k: "fixo", label: "Custo Fixo (se repete todo mês)", type: "checkbox", value: c && c.fixo }, { k: "cor", label: "Cor (hex)", value: c ? c.cor : "#5B6068" }, { k: "ativa", label: "Ativa", type: "checkbox", value: c ? c.ativa !== false : true }], onSubmit(v) { v.tipo = v.natureza === "receita" ? "receita" : "despesa"; Store.change("financas", (dd) => { if (c) Object.assign(dd.categorias.find((x) => x.id === c.id), v); else dd.categorias.push(Object.assign({ id: uid("c") }, v)); }); ERP.render(); }, onDelete: c ? () => { if (d.lanc.some((l) => l.catId === c.id)) { ERP.toast("Categoria em uso: desative em vez de excluir."); return; } Store.change("financas", (dd) => { dd.categorias = dd.categorias.filter((x) => x.id !== c.id); }); ERP.render(); } : null });
     const favF = (f) => ERP.form({ title: f ? "Editar Favorecido" : "Novo Favorecido", fields: [
         { k: "nome", label: "Nome", value: f ? f.nome : "", required: true, placeholder: "Ex.: Enel, Netflix, Academia" },
@@ -2890,7 +2903,7 @@ body:not(.gated)::before{display:none}
         { k: "classe", label: "Classificação Padrão", type: "select", value: f ? f.classe || "" : "", options: [["", "Pela Categoria"]].concat(F.CLASSES.map((x) => [x[0], x[1]])) },
         { k: "centro", label: "Centro de Custo Padrão", type: "select", creatable: "centro", value: f ? f.centro || "" : "", options: centroOpts() },
         { k: "forma", label: "Forma de Pagamento Padrão", type: "select", creatable: "forma", value: f ? f.forma || "" : "", options: formaOpts() },
-        { k: "origem", label: "Conta / Cartão Padrão", type: "select", value: f ? f.origem || "" : "", options: [["", "—"]].concat(origemOpts(true)) },
+        { k: "origem", label: "Conta / Cartão Padrão", type: "select", creatable: "origem", value: f ? f.origem || "" : "", options: [["", "—"]].concat(origemOpts(true)) },
         { k: "moeda", label: "Moeda", type: "select", value: f ? f.moeda || "BRL" : "BRL", options: [["BRL", "R$ (real)"], ["USD", "US$ (dólar)"]] },
         { k: "dia", label: "Dia de Vencimento Habitual", type: "number", value: f ? f.dia || "" : "" },
         { k: "ativo", label: "Ativo", type: "checkbox", value: f ? f.ativo !== false : true },
@@ -3658,6 +3671,23 @@ body:not(.gated)::before{display:none}
   const { $, $$, esc, uid, brl, usd, num, pct, todayISO, fdate, Store } = ERP;
 
   const CLASSES = [["acoes", "Ações / ETF de Ações"], ["rf", "Renda Fixa / ETF de Títulos"], ["commod", "Commodities"], ["cripto", "Criptoativos"], ["fii", "FIIs"], ["outro", "Outro"]];
+  const D0 = () => ERP.Store.get("investimentos");
+  /* corretora e ativo criados na hora, de dentro do formulário de movimentação (XP, Rico, Nu, BTG… ou uma nova conta IBKR) */
+  ERP.creators.corretora = (nome) => {
+    nome = nome.trim(); const ja = D0().brokers.find((b) => b.name.toLowerCase() === nome.toLowerCase()); if (ja) return ja.id;
+    const br = /\b(b3|xp|rico|clear|nu|inter|btg|ita[uú]|bradesco|santander|caixa|banco|genial|modal|[oó]rama|warren|[aá]gora|toro|easynvest|sofisa|c6|safra|sicredi|sicoob|avenue)\b/i.test(nome) && !/avenue/i.test(nome);
+    const id = uid("br"); ERP.Store.change("investimentos", (dd) => { dd.brokers.push({ id, name: nome, country: br ? "Brasil" : "EUA", currency: br ? "BRL" : "USD" }); });
+    ERP.toast(`Corretora "${nome}" cadastrada (${br ? "R$" : "US$"}). Moeda e país em Investimentos › Carteira.`); return id;
+  };
+  /* ativo: ticker digitado vira cadastro; B3 (PETR4, XPLG11, BOVA11) → R$, FII se termina em 11; demais → moeda da corretora escolhida */
+  ERP.creators.ativo = (nome, sel) => {
+    const t = nome.trim().toUpperCase(); const ja = D0().assets.find((a) => (a.ticker || "").toUpperCase() === t); if (ja) return ja.id;
+    const b3 = /^[A-Z]{4}\d{1,2}[A-Z]?$/.test(t); const fm = sel && sel.form;
+    const brokerId = (fm && fm.elements.brokerId && fm.elements.brokerId.value) || (D0().brokers[0] || {}).id;
+    const broker = D0().brokers.find((b) => b.id === brokerId); const currency = b3 ? "BRL" : (broker && broker.currency) || "USD";
+    const id = uid("as"); ERP.Store.change("investimentos", (dd) => { dd.assets.push({ id, ticker: t, name: nome.trim(), cls: b3 && /11$/.test(t) ? "fii" : "acoes", brokerId, currency, price: 0, priceAt: "", irpf: "" }); });
+    ERP.toast(`Ativo ${t} cadastrado em ${currency === "BRL" ? "R$" : "US$"}. Nome, classe e cotação em Investimentos › Carteira.`); return id;
+  };
   const CLN = Object.fromEntries(CLASSES);
   ERP.defaults.investimentos = {
     brokers: [{ id: "ibkr", name: "Interactive Brokers", country: "EUA", currency: "USD" }],
@@ -3704,11 +3734,11 @@ body:not(.gated)::before{display:none}
   }
   function ibkrCard() {
     if (!ERP.Cloud || !ERP.Cloud.account) return "";
-    if (!ibkr) return ibkrBusy ? `<div class="card"><h3>Conexão IBKR</h3><p class="mut">Procurando dados da IBKR no OneDrive…</p></div>` : `<div class="card"><h3>Conexão IBKR</h3><p class="mut">Ainda não há o arquivo <code>ibkr.json</code> no OneDrive. Quando o robô gravar o arquivo, as posições, o caixa e o câmbio aparecem aqui para aplicar.</p></div>`;
+    if (!ibkr) return ibkrBusy ? `<div class="card"><h3>Conexão IBKR</h3><p class="mut">Procurando dados da IBKR na nuvem…</p></div>` : `<div class="card"><h3>Conexão IBKR</h3><p class="mut">Ainda não há dados da IBKR na nuvem (registro <code>ibkr</code>). Quando o robô gravar o arquivo, as posições, o caixa e o câmbio aparecem aqui para aplicar.</p></div>`;
     const pos = ibkr.positions || []; const asof = ibkr.asof ? new Date(ibkr.asof) : null;
     const novos = pos.filter((p) => +p.qty > 0 && !ibkrMatch(p.ticker)).length;
     return `<div class="card"><h3>Conexão IBKR <span class="pill ok">ao vivo</span></h3>
-      <p class="mut" style="margin-bottom:8px">Dados gravados pelo robô no OneDrive${asof ? " · atualizado em " + asof.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : ""}.${ibkr.nav != null ? " NAV " + usd(+ibkr.nav) + "." : ""} Caixa ${usd(+ibkr.cashUSD || 0)} · câmbio ${num(+((ibkr.fx || {}).USDBRL) || 0, 4)}.</p>
+      <p class="mut" style="margin-bottom:8px">Dados da IBKR gravados na nuvem${asof ? " · atualizado em " + asof.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : ""}.${ibkr.nav != null ? " NAV " + usd(+ibkr.nav) + "." : ""} Caixa ${usd(+ibkr.cashUSD || 0)} · câmbio ${num(+((ibkr.fx || {}).USDBRL) || 0, 4)}.</p>
       <div class="tw"><table><thead><tr><th>Ativo</th><th class="r">Qtd.</th><th class="r">Cotação</th><th class="r">Valor</th><th>No Hub</th></tr></thead><tbody>${pos.map((p) => `<tr><td><b>${esc(p.ticker)}</b> <span class="mut" style="font-size:12px">${esc(p.name || "")}</span></td><td class="r">${num(+p.qty, 4)}</td><td class="r">${usd(+p.price || 0)}</td><td class="r">${usd((+p.qty || 0) * (+p.price || 0))}</td><td>${ibkrMatch(p.ticker) ? '<span class="pill ok">sim</span>' : '<span class="pill warn">novo</span>'}</td></tr>`).join("")}</tbody></table></div>
       <div class="toolbar" style="margin-top:10px"><button class="btn orange sm" id="ibApply">Aplicar cotações, caixa e câmbio</button>${novos ? `<button class="btn ghost sm" id="ibNew">Criar ${novos} ativo(s) que faltam</button>` : ""}</div></div>`;
   }
@@ -3750,8 +3780,8 @@ body:not(.gated)::before{display:none}
       fields: [
         { k: "kind", label: "Tipo", type: "select", value: m.kind, options: KIND },
         { k: "date", label: "Data", type: "date", value: m.date, required: true },
-        { k: "assetId", label: "Ativo", type: "select", value: m.assetId, options: [["", "— (caixa)"]].concat(d.assets.map((a) => [a.id, a.ticker + " · " + a.name])) },
-        { k: "brokerId", label: "Corretora", type: "select", value: m.brokerId, options: d.brokers.map((b) => [b.id, b.name]) },
+        { k: "assetId", label: "Ativo", type: "select", creatable: "ativo", value: m.assetId, options: [["", "— (caixa)"]].concat(d.assets.map((a) => [a.id, a.ticker + " · " + a.name])) },
+        { k: "brokerId", label: "Corretora", type: "select", creatable: "corretora", value: m.brokerId, options: d.brokers.map((b) => [b.id, b.name]) },
         { k: "qty", label: "Quantidade (compra/venda)", type: "number", step: "any", value: m.qty },
         { k: "price", label: "Preço Unitário", type: "number", step: "any", value: m.price },
         { k: "amount", label: "Valor (dividendo, imposto, juros, depósito, taxa)", type: "number", step: "0.01", value: m.amount },
@@ -3775,7 +3805,7 @@ body:not(.gated)::before{display:none}
       fields: [
         { k: "ticker", label: "Ticker", value: a.ticker, required: true }, { k: "name", label: "Nome", value: a.name },
         { k: "cls", label: "Classe", type: "select", value: a.cls, options: CLASSES }, { k: "currency", label: "Moeda", type: "select", value: a.currency, options: [["USD", "USD"], ["BRL", "BRL"], ["EUR", "EUR"]] },
-        { k: "brokerId", label: "Corretora", type: "select", value: a.brokerId, options: d.brokers.map((b) => [b.id, b.name]) },
+        { k: "brokerId", label: "Corretora", type: "select", creatable: "corretora", value: a.brokerId, options: d.brokers.map((b) => [b.id, b.name]) },
         { k: "price", label: "Cotação Atual", type: "number", step: "any", value: a.price }, { k: "priceAt", label: "Data da Cotação", type: "date", value: a.priceAt || todayISO() },
         { k: "irpf", label: "IRPF — Grupo/Código (confira no programa do ano)", value: a.irpf, full: true },
       ],
@@ -3946,7 +3976,7 @@ body:not(.gated)::before{display:none}
   function movForm(it, tipo) {
     const F = ERP.fin; const ap = tipo === "aporte";
     ERP.form({ title: (ap ? "Aporte em " : "Resgate de ") + it.name, intro: `Atual: ${it.moeda === "USD" ? usd(it.value) : brl(it.value)}${it.investido != null ? " · investido " + (it.moeda === "USD" ? usd(it.investido) : brl(it.investido)) : ""}.`,
-      fields: [{ k: "valor", label: `Valor (${it.moeda === "USD" ? "US$" : "R$"})`, type: "number", step: "0.01" }, { k: "data", label: "Data", type: "date", value: todayISO() }, { k: "lanc", label: ap ? "Lançar a saída da conta em Finanças" : "Lançar a entrada na conta em Finanças", type: "checkbox", value: it.moeda !== "USD" }, { k: "contaId", label: "Conta", type: "select", options: F.contasAtivas().map((c) => [c.id, c.nome]) }],
+      fields: [{ k: "valor", label: `Valor (${it.moeda === "USD" ? "US$" : "R$"})`, type: "number", step: "0.01" }, { k: "data", label: "Data", type: "date", value: todayISO() }, { k: "lanc", label: ap ? "Lançar a saída da conta em Finanças" : "Lançar a entrada na conta em Finanças", type: "checkbox", value: it.moeda !== "USD" }, { k: "contaId", label: "Conta", type: "select", creatable: "conta", options: F.contasAtivas().map((c) => [c.id, c.nome]) }],
       okLabel: ap ? "Registrar aporte" : "Registrar resgate",
       onSubmit(v) {
         if (!(v.valor > 0)) { ERP.toast("Informe o valor."); return false; }

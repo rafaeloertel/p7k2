@@ -1,7 +1,7 @@
 /* Hub — app instalável: guarda a casca do sistema para abrir sem internet.
    Arquivos do próprio site: rede primeiro (pega versão nova), cópia local se estiver offline.
    Chart.js (cdnjs): cópia local primeiro. Login e dados (Supabase) nunca passam pelo cache. */
-const VER = "hub-v0.13.0";
+const VER = "hub-v0.13.1";
 const SHELL = ["./", "index.html", "manifest.json", "supabase.js", "591.supabase.js", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(VER).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== VER).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
