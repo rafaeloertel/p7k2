@@ -18,50 +18,61 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* Hub — v0.4 · sistema visual (Manrope, marinho + laranja sobre branco) */
+/* Hub — v0.13 · sistema visual alinhado ao Design System "Nova Macabu" (07/11/2026):
+   Manrope; azul-marinho #0F1E3A para texto e estrutura; laranja #D6421F só na ação principal e no item ativo;
+   cantos geométricos de 2 px; cantoneiras laranja (cima/esquerda) e marinho (baixo/direita) como assinatura,
+   usadas com parcimônia: login, janelas e item ativo do menu. Modo escuro deriva dos mesmos tokens. */
 
 /* ---------- tokens ---------- */
-/* Linha "Marinho" em fundo branco: texto e estrutura em azul-marinho, laranja só para a ação principal e o item ativo */
 :root{
   --font:"Manrope","Segoe UI",system-ui,sans-serif;
-  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F4F5F7; --surface-3:#EBEDF1;
-  --line:#E6E8EC; --line-2:#D3D7DE;
-  --ink:#0B1628; --ink-2:#536074; --ink-3:#8A93A4;
-  --accent:#E4572A; --accent-2:#C9461B; --accent-soft:#FDEEE8; --on-accent:#FFFFFF;
-  --pos:#14794A; --pos-bg:#E6F4EC; --neg:#C0362A; --neg-bg:#FCEAE7; --warn:#9A5B00; --warn-bg:#FDF2DE; --info:#2C5BA6; --info-bg:#EAF0FA;
-  --c1:#0B1628; --c2:#E4572A; --c3:#7D8AA2; --c4:#C3CAD6;
-  --side-bg:#FFFFFF; --side-ink:#46526A; --side-ink-on:#0B1628; --side-on:#F2F3F6; --side-line:#E6E8EC; --side-mark:#E4572A;
-  --mono-bg:#0B1628; --mono-ink:#F1612F;
-  --r-sm:7px; --r:9px; --r-lg:12px;
-  --shadow-pop:0 18px 50px rgba(11,22,40,.18),0 2px 6px rgba(11,22,40,.08);
-  --shadow-1:0 1px 2px rgba(11,22,40,.04);
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F5F6F8; --surface-3:#ECEEF2;
+  --line:#E2E5E9; --line-2:#CFD4DB;
+  --navy:#0F1E3A; --navy-2:#1A2E52;
+  --ink:#0F1E3A; --ink-2:#4F5D74; --ink-3:#7E8899;
+  --accent:#D6421F; --accent-2:#B8381A; --accent-soft:#FFF1EA; --accent-line:#F6C3AE; --on-accent:#FFFFFF;
+  --pos:#197A46; --pos-bg:#E4F3EA; --neg:#B3271E; --neg-bg:#FBE7E4; --warn:#8A5A00; --warn-bg:#FBF1DA; --info:#1F4E96; --info-bg:#E8EFFA;
+  --c1:#0F1E3A; --c2:#D6421F; --c3:#7D8AA2; --c4:#C3CAD6;
+  --side-bg:#FFFFFF; --side-ink:#4F5D74; --side-ink-on:#0F1E3A; --side-on:#F5F6F8; --side-line:#E2E5E9; --side-mark:#D6421F;
+  --mono-bg:#0F1E3A; --mono-ink:#D6421F;
+  --geo:2px; --geo-t:2px; --r-sm:2px; --r:2px; --r-lg:2px; --r-pill:999px;
+  --shadow-pop:0 18px 50px rgba(15,30,58,.18),0 2px 6px rgba(15,30,58,.08);
+  --shadow-1:0 1px 2px rgba(15,30,58,.04);
   --side-w:236px;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0C1320; --surface:#111A29; --surface-2:#172235; --surface-3:#1E2B40; --line:#1F2B3E; --line-2:#2E3C53;
-    --ink:#E8ECF3; --ink-2:#A3AEC1; --ink-3:#6F7C92;
-    --accent:#F2754A; --accent-2:#F58F6B; --accent-soft:#3A2016; --on-accent:#1B0B04;
-    --pos:#55C08A; --pos-bg:#12291F; --neg:#F07C6C; --neg-bg:#351B17; --warn:#E3B04C; --warn-bg:#2F2611; --info:#8DB0EE; --info-bg:#172338;
-    --c1:#8FA6CC; --c2:#F2754A; --c3:#5D6E8A; --c4:#2E3C53;
-    --side-bg:#0C1320; --side-ink:#A3AEC1; --side-ink-on:#FFFFFF; --side-on:#172235; --side-line:#1A2537; --side-mark:#F2754A;
-    --mono-bg:#F1612F; --mono-ink:#0B1628;
+    --bg:#0B1322; --surface:#111B2D; --surface-2:#172338; --surface-3:#1E2C44; --line:#213047; --line-2:#2F3F5A;
+    --navy:#E8ECF3; --navy-2:#FFFFFF;
+    --ink:#E8ECF3; --ink-2:#A6B0C2; --ink-3:#74829A;
+    --accent:#F0734A; --accent-2:#F58F6B; --accent-soft:#3A2016; --accent-line:#5A2E1C; --on-accent:#1B0B04;
+    --pos:#58C28D; --pos-bg:#12291F; --neg:#F07C6C; --neg-bg:#351B17; --warn:#E3B04C; --warn-bg:#2F2611; --info:#8DB0EE; --info-bg:#172338;
+    --c1:#8FA6CC; --c2:#F0734A; --c3:#5D6E8A; --c4:#2F3F5A;
+    --side-bg:#0B1322; --side-ink:#A6B0C2; --side-ink-on:#FFFFFF; --side-on:#172338; --side-line:#1A2639; --side-mark:#F0734A;
+    --mono-bg:#D6421F; --mono-ink:#0F1E3A;
     --shadow-pop:0 18px 50px rgba(0,0,0,.5); --shadow-1:none; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0C1320; --surface:#111A29; --surface-2:#172235; --surface-3:#1E2B40; --line:#1F2B3E; --line-2:#2E3C53;
-  --ink:#E8ECF3; --ink-2:#A3AEC1; --ink-3:#6F7C92;
-  --accent:#F2754A; --accent-2:#F58F6B; --accent-soft:#3A2016; --on-accent:#1B0B04;
-  --pos:#55C08A; --pos-bg:#12291F; --neg:#F07C6C; --neg-bg:#351B17; --warn:#E3B04C; --warn-bg:#2F2611; --info:#8DB0EE; --info-bg:#172338;
-  --c1:#8FA6CC; --c2:#F2754A; --c3:#5D6E8A; --c4:#2E3C53;
-  --side-bg:#0C1320; --side-ink:#A3AEC1; --side-ink-on:#FFFFFF; --side-on:#172235; --side-line:#1A2537; --side-mark:#F2754A;
-  --mono-bg:#F1612F; --mono-ink:#0B1628;
+  --bg:#0B1322; --surface:#111B2D; --surface-2:#172338; --surface-3:#1E2C44; --line:#213047; --line-2:#2F3F5A;
+  --navy:#E8ECF3; --navy-2:#FFFFFF;
+  --ink:#E8ECF3; --ink-2:#A6B0C2; --ink-3:#74829A;
+  --accent:#F0734A; --accent-2:#F58F6B; --accent-soft:#3A2016; --accent-line:#5A2E1C; --on-accent:#1B0B04;
+  --pos:#58C28D; --pos-bg:#12291F; --neg:#F07C6C; --neg-bg:#351B17; --warn:#E3B04C; --warn-bg:#2F2611; --info:#8DB0EE; --info-bg:#172338;
+  --c1:#8FA6CC; --c2:#F0734A; --c3:#5D6E8A; --c4:#2F3F5A;
+  --side-bg:#0B1322; --side-ink:#A6B0C2; --side-ink-on:#FFFFFF; --side-on:#172338; --side-line:#1A2639; --side-mark:#F0734A;
+  --mono-bg:#D6421F; --mono-ink:#0F1E3A;
   --shadow-pop:0 18px 50px rgba(0,0,0,.5); --shadow-1:none; color-scheme:dark;
 }
 /* nomes antigos usados pelos módulos */
-:root{--navy:var(--ink);--orange:var(--accent);--white:var(--surface);--soft:var(--surface-2);--soft-2:var(--surface-3);--ok:var(--pos);--ok-bg:var(--pos-bg);--err:var(--neg);--err-bg:var(--neg-bg);--orange-soft:var(--accent-soft)}
+:root{--orange:var(--accent);--orange-ink:var(--accent-2);--white:var(--surface);--soft:var(--surface-2);--soft-2:var(--surface-3);--ok:var(--pos);--ok-bg:var(--pos-bg);--err:var(--neg);--err-bg:var(--neg-bg);--orange-soft:var(--accent-soft)}
+
+/* ---------- assinatura: cantoneiras (laranja cima/esquerda, marinho baixo/direita) ---------- */
+.geo{position:relative}
+.geo::before,.geo::after{content:"";position:absolute;width:var(--geo-w,22px);height:var(--geo-w,22px);pointer-events:none;transition:width .2s ease,height .2s ease}
+.geo::before{top:-1px;left:-1px;border-top:var(--geo-t) solid var(--accent);border-left:var(--geo-t) solid var(--accent)}
+.geo::after{right:-1px;bottom:-1px;border-right:var(--geo-t) solid var(--navy);border-bottom:var(--geo-t) solid var(--navy)}
 
 /* ---------- base ---------- */
 *{box-sizing:border-box;margin:0;padding:0}
@@ -75,7 +86,7 @@ a{color:inherit}
 .ico{flex:none;vertical-align:-.2em;display:inline-block}
 .mut{color:var(--ink-2)} .pos{color:var(--pos)} .neg{color:var(--neg)}
 td,.kpi .v,.fp-big,.fin-cc-v,.fin-fat-v,.hrow .v,.fp-dre .row,.fp-stats b{font-variant-numeric:tabular-nums}
-code{font-size:12.5px;background:var(--surface-2);padding:1px 6px;border-radius:5px}
+code{font-size:12.5px;background:var(--surface-2);padding:1px 6px;border-radius:var(--r-sm)}
 
 /* ---------- casca ---------- */
 .app{display:flex;flex-direction:column;min-height:100vh}
@@ -95,8 +106,9 @@ code{font-size:12.5px;background:var(--surface-2);padding:1px 6px;border-radius:
 .topnav::-webkit-scrollbar{display:none}
 .topnav a{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--r-sm);text-decoration:none;font-weight:500;font-size:13.5px;color:var(--side-ink);white-space:nowrap;position:relative}
 .topnav a:hover{background:var(--side-on);color:var(--side-ink-on)}
-.topnav a.on{background:var(--side-on);color:var(--side-ink-on);font-weight:600}
-.topnav a.on::after{content:"";position:absolute;left:12px;right:12px;bottom:-9px;height:3px;border-radius:3px 3px 0 0;background:var(--side-mark)}
+.topnav a.on{background:var(--side-on);color:var(--side-ink-on);font-weight:700}
+.topnav a.on::before{content:"";position:absolute;top:0;left:0;width:9px;height:9px;border-top:2px solid var(--accent);border-left:2px solid var(--accent);pointer-events:none}
+.topnav a.on::after{content:"";position:absolute;left:12px;right:12px;bottom:-9px;height:3px;background:var(--side-mark)}
 .body{display:grid;grid-template-columns:var(--side-w) minmax(0,1fr);flex:1;min-height:0}
 .side{position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:14px 10px 12px;color:var(--ink-2);transition:width .15s}
 body.side-hidden .body{grid-template-columns:minmax(0,1fr)}
@@ -108,11 +120,14 @@ body.side-hidden .side{display:none}
 .sn-sep::after{content:"";flex:1;height:1px;background:var(--line)}
 .sidenav a,.side-foot a{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--r-sm);text-decoration:none;font-weight:500;font-size:13.5px;color:var(--ink-2);position:relative;white-space:nowrap}
 .sidenav a:hover,.side-foot a:hover{background:var(--surface-2);color:var(--ink)}
-.sidenav a.on,.side-foot a.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
-.sidenav a.on svg{stroke-width:2.2}
+.sidenav a.on,.side-foot a.on{background:var(--accent-soft);color:var(--ink);font-weight:700}
+.sidenav a.on::before,.sidenav a.on::after,.side-foot a.on::before,.side-foot a.on::after{content:"";position:absolute;width:10px;height:10px;pointer-events:none}
+.sidenav a.on::before,.side-foot a.on::before{top:0;left:0;border-top:2px solid var(--accent);border-left:2px solid var(--accent)}
+.sidenav a.on::after,.side-foot a.on::after{right:0;bottom:0;border-right:2px solid var(--navy);border-bottom:2px solid var(--navy)}
+.sidenav a.on svg{stroke-width:2.2;color:var(--accent-2)}
 .sidenav a svg,.side-foot a svg{flex:none}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;padding:2px 8px 18px;color:var(--side-ink-on)}
-.mono{width:32px;height:32px;border-radius:9px;background:var(--mono-bg);color:var(--mono-ink);display:grid;place-items:center;font-weight:700;font-size:13px;letter-spacing:.02em;text-decoration:none;flex:none}
+.mono{width:32px;height:32px;border-radius:var(--r);background:var(--mono-bg);color:var(--mono-ink);display:grid;place-items:center;font-weight:700;font-size:13px;letter-spacing:.02em;text-decoration:none;flex:none}
 .brand b{display:block;font-size:14px;font-weight:600;line-height:1.2}
 .brand small{display:block;font-size:12px;color:var(--side-ink);opacity:.85}
 .side-foot{margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid var(--line)}
@@ -141,15 +156,15 @@ main{min-width:0;padding:22px 40px 80px;max-width:1360px;width:100%;margin-left:
 .brand .ver{font-weight:600;color:var(--ink-3);margin-left:4px;font-size:10.5px;background:var(--bg-2,rgba(0,0,0,.06));padding:1px 6px;border-radius:999px}
 .xs-i .xs-d{display:block;font-size:11px;color:var(--ink-3);margin-top:1px;line-height:1.3;white-space:normal}
 .pagehead{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;margin-bottom:20px;min-height:40px}
-.pagehead h1{font-size:24px;font-weight:600;letter-spacing:-.022em;line-height:1.2;color:var(--ink)}
+.pagehead h1{font-size:24px;font-weight:700;letter-spacing:-.022em;line-height:1.2;color:var(--navy)}
 .pagehead .sp{flex:1}
 .crumbs{display:none}
 
 /* ---------- componentes ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;border:1px solid var(--ink);background:var(--ink);color:var(--surface);padding:0 14px;border-radius:var(--r-sm);font-weight:600;font-size:13.5px;white-space:nowrap;text-decoration:none;transition:background .12s,border-color .12s}
-.btn:hover{filter:brightness(1.15)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;border:1px solid var(--navy);background:var(--navy);color:var(--surface);padding:0 14px;border-radius:var(--r-sm);font-weight:600;font-size:13.5px;white-space:nowrap;text-decoration:none;transition:background .12s,border-color .12s}
+.btn:hover{background:var(--navy-2);border-color:var(--navy-2)}
 .btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line-2)}
-.btn.ghost:hover{filter:none;background:var(--surface-2)}
+.btn.ghost:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--ink)}
 .btn.orange{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .btn.orange:hover{filter:none;background:var(--accent-2);border-color:var(--accent-2)}
 .btn.danger{background:var(--surface);color:var(--neg);border-color:var(--line-2)}
@@ -159,11 +174,11 @@ main{min-width:0;padding:22px 40px 80px;max-width:1360px;width:100%;margin-left:
 .ib{width:30px;height:30px;border:0;background:none;border-radius:var(--r-sm);color:var(--ink-3);display:inline-grid;place-items:center;margin-left:1px;font-size:13px}
 .ib:hover{background:var(--surface-2);color:var(--ink)} .ib.ok:hover{color:var(--pos);background:var(--pos-bg)} .ib.del:hover{color:var(--neg);background:var(--neg-bg)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 20px;margin-bottom:16px}
-.card h3{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:12px;letter-spacing:-.005em}
+.card h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px;letter-spacing:-.005em}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:16px}
 .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:15px 18px 16px;min-width:0;position:relative}
 .kpi .l{font-size:12.5px;color:var(--ink-2);font-weight:500;display:flex;align-items:center;gap:6px}
-.kpi .v{font-size:24px;font-weight:600;letter-spacing:-.025em;margin-top:4px;line-height:1.2;overflow-wrap:anywhere;color:var(--ink)}
+.kpi .v{font-size:24px;font-weight:700;letter-spacing:-.025em;margin-top:4px;line-height:1.2;overflow-wrap:anywhere;color:var(--navy)}
 .kpi .s{font-size:12.5px;color:var(--ink-2);margin-top:4px}
 .kpi.pos .v{color:var(--pos)} .kpi.neg .v{color:var(--neg)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -175,18 +190,29 @@ textarea{height:auto;padding:9px 11px}
 input[type=checkbox]{height:auto}
 input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
 ::placeholder{color:var(--ink-3)}
-.tw{overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg)}
+/* tabelas (padrão v0.14.43 do ERP NMB): cabeçalho em letra normal, zebra sutil, 1ª coluna fixa e aviso de rolagem nas largas */
+.tw{overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);position:relative;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;font-size:13.5px}
-th{background:var(--surface);text-align:left;font-size:12px;color:var(--ink-3);font-weight:500;padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
-td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{background:var(--surface-2);text-align:left;font-size:12.5px;color:var(--ink-2);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--surface-2) 45%,var(--surface))}
 tr:last-child td{border-bottom:0}
-tbody tr:hover{background:var(--surface-2)}
+tbody tr:hover td{background:var(--accent-soft)}
 td.r,th.r{text-align:right}
-tr.total td{font-weight:600;background:var(--surface-2)}
+tr.total td{font-weight:700;color:var(--navy);background:var(--surface-2);border-top:2px solid var(--navy)}
 .card .tw{border-radius:var(--r);margin:0}
-.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:500;background:var(--surface-2);color:var(--ink-2);white-space:nowrap;line-height:1.5}
+.tw.wide table th:first-child,.tw.wide table td:first-child{position:sticky;left:0;z-index:1;background:var(--surface);box-shadow:1px 0 0 var(--line)}
+.tw.wide table th:first-child{background:var(--surface-2)}
+.tw.wide tbody tr:nth-child(even) td:first-child{background:color-mix(in srgb,var(--surface-2) 45%,var(--surface))}
+.tw.wide tbody tr:hover td:first-child{background:var(--accent-soft)}
+.tw-hint{display:none;font-size:12px;color:var(--ink-3);padding:6px 12px;border-top:1px solid var(--line);background:var(--surface-2)}
+.tw.wide .tw-hint{display:block}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:var(--r-pill);font-size:12px;font-weight:600;background:var(--surface-2);color:var(--ink-2);white-space:nowrap;line-height:1.5}
 .pill.ok{background:var(--pos-bg);color:var(--pos)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.err{background:var(--neg-bg);color:var(--neg)} .pill.info{background:var(--info-bg);color:var(--info)}
-.empty{padding:40px 16px;text-align:center;color:var(--ink-2)}
+/* estado vazio: diz o que fazer e oferece o botão que resolve */
+.empty{padding:36px 20px;text-align:center;color:var(--ink-2);border:1px dashed var(--line-2);border-radius:var(--r);background:var(--surface)}
+.empty b,.empty strong{display:block;color:var(--navy);font-size:15px;margin-bottom:4px}
+.empty .btn{margin-top:14px}
 .note{display:flex;gap:10px;align-items:flex-start;border:1px solid color-mix(in srgb,var(--warn) 25%,transparent);background:var(--warn-bg);color:var(--ink);padding:11px 14px;font-size:13.5px;margin-bottom:14px;border-radius:var(--r)}
 .note.info{border-color:color-mix(in srgb,var(--info) 25%,transparent);background:var(--info-bg)}
 .note.err{border-color:color-mix(in srgb,var(--neg) 25%,transparent);background:var(--neg-bg)}
@@ -198,7 +224,9 @@ tr.total td{font-weight:600;background:var(--surface-2)}
 .tabs{display:inline-flex;gap:2px;background:var(--surface-2);padding:3px;border-radius:var(--r);margin-bottom:14px;flex-wrap:wrap}
 .tabs button{background:none;border:0;height:30px;padding:0 12px;font-weight:500;color:var(--ink-2);font-size:13px;border-radius:calc(var(--r) - 3px)}
 .tabs button:hover{color:var(--ink)}
-.tabs button.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08),0 0 0 1px var(--line)}
+.tabs button{position:relative}
+.tabs button.on{background:var(--surface);color:var(--navy);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08),0 0 0 1px var(--line)}
+.tabs button.on::before{content:"";position:absolute;top:0;left:0;width:7px;height:7px;border-top:2px solid var(--accent);border-left:2px solid var(--accent);pointer-events:none}
 .cols6{display:flex;align-items:flex-end;gap:14px;height:150px;padding:6px 4px 0}
 .cols6 .c{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
 .cols6 .pair{display:flex;gap:3px;align-items:flex-end;height:120px;width:100%;justify-content:center}
@@ -208,17 +236,22 @@ tr.total td{font-weight:600;background:var(--surface-2)}
 
 /* modal, avisos */
 .ov{position:fixed;inset:0;background:rgba(10,14,20,.45);backdrop-filter:blur(2px);z-index:60;display:flex;align-items:flex-start;justify-content:center;padding:7vh 14px;overflow:auto;animation:ovIn .14s ease-out}
-.modal{background:var(--surface);border-radius:var(--r-lg);width:100%;max-width:560px;padding:22px 24px 20px;box-shadow:var(--shadow-pop);border:1px solid var(--line);animation:mIn .16s ease-out}
+.modal{background:var(--surface);border-radius:var(--r-lg);width:100%;max-width:560px;padding:22px 24px 20px;box-shadow:var(--shadow-pop);border:1px solid var(--line);animation:mIn .16s ease-out;position:relative}
+.modal::before,.modal::after{content:"";position:absolute;width:22px;height:22px;pointer-events:none}
+.modal::before{top:-1px;left:-1px;border-top:var(--geo-t) solid var(--accent);border-left:var(--geo-t) solid var(--accent)}
+.modal::after{right:-1px;bottom:-1px;border-right:var(--geo-t) solid var(--navy);border-bottom:var(--geo-t) solid var(--navy)}
 @keyframes ovIn{from{opacity:0}} @keyframes mIn{from{opacity:0;transform:translateY(8px) scale(.99)}}
 .modal.wide{max-width:780px}
-.modal h2{font-size:18px;font-weight:600;letter-spacing:-.015em;margin-bottom:16px}
+.modal h2{font-size:18px;font-weight:700;letter-spacing:-.015em;margin-bottom:16px;color:var(--navy)}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .fg .f{display:flex;flex-direction:column;gap:5px}
 .fg .f.full{grid-column:1/-1}
 .fg label{font-size:12.5px;font-weight:500;color:var(--ink-2)}
 .modal .act{display:flex;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line);align-items:center;flex-wrap:wrap}
 .modal .act .sp{flex:1}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:var(--r);z-index:80;font-weight:500;font-size:13.5px;max-width:min(92vw,520px);box-shadow:var(--shadow-pop);animation:mIn .16s ease-out}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 16px;border-radius:var(--r);border-left:3px solid var(--accent);z-index:80;font-weight:500;font-size:13.5px;max-width:min(92vw,520px);box-shadow:var(--shadow-pop);animation:mIn .16s ease-out}
+:root[data-theme="dark"] .toast{background:#E8ECF3;color:#0F1E3A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .toast{background:#E8ECF3;color:#0F1E3A}}
 
 .tic{display:inline-flex;vertical-align:-2px;color:var(--ink-3);margin-left:4px}
 .cat{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink);white-space:nowrap}
@@ -478,7 +511,7 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .fp-filtros .xs-btn{height:32px}
 .xs-pop,.xc{position:fixed;z-index:10000;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-pop);animation:mIn .12s ease-out}
 .xs-pop{padding:6px;overflow:auto;max-width:min(92vw,420px)}
-.xs-i{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 11px;border-radius:8px;font-size:14px;color:var(--ink);cursor:pointer}
+.xs-i{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 11px;border-radius:var(--r);font-size:14px;color:var(--ink);cursor:pointer}
 .xs-i.hv,.xs-i:hover{background:var(--surface-2)}
 .xs-i.on{background:var(--info-bg);font-weight:600}
 .xs-i.on svg{color:var(--accent);flex:none}
@@ -494,23 +527,23 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .xc{width:286px;padding:12px 12px 8px}
 .xc button{border:0;background:transparent;color:var(--ink);cursor:pointer;font:inherit}
 .xc-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.xc-n{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--ink-2)!important}
+.xc-n{width:32px;height:32px;border-radius:var(--r);display:grid;place-items:center;color:var(--ink-2)!important}
 .xc-n:hover,.xc-m:hover{background:var(--surface-2)}
-.xc-m{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:14px;padding:6px 8px;border-radius:8px}
+.xc-m{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:14px;padding:6px 8px;border-radius:var(--r)}
 .xc-m svg{color:var(--ink-2)}
 .xc-w,.xc-g{display:grid;grid-template-columns:repeat(7,1fr)}
 .xc-w span{text-align:center;font-size:11px;font-weight:700;color:var(--ink-3);padding:6px 0}
-.xc-d{height:34px;border-radius:8px;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
+.xc-d{height:34px;border-radius:var(--r);font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
 .xc-d.out{color:var(--ink-3)}
 .xc-d:hover{background:var(--surface-2)}
 .xc-d.today{box-shadow:inset 0 0 0 1px var(--accent)}
 .xc-d.on,.xc-d.on:hover{background:var(--ink);color:var(--bg)!important;font-weight:700;box-shadow:none}
 .xc-f{display:flex;justify-content:space-between;margin-top:8px;padding-top:6px;border-top:1px solid var(--line)}
-.xc-f button{font-size:13px;font-weight:600;padding:6px 8px;border-radius:8px;color:var(--ink-2)}
+.xc-f button{font-size:13px;font-weight:600;padding:6px 8px;border-radius:var(--r);color:var(--ink-2)}
 .xc-f button:hover{background:var(--surface-2)}
 .xc-f .hoje{color:var(--accent)}
 .xc-meses{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px 0 8px}
-.xc-meses button{height:40px;border-radius:8px;font-weight:600;font-size:13.5px}
+.xc-meses button{height:40px;border-radius:var(--r);font-weight:600;font-size:13.5px}
 .xc-meses button:hover{background:var(--surface-2)}
 .xc-meses button.on{background:var(--ink);color:var(--bg)}
 @media (max-width:600px){.xc{width:min(300px,calc(100vw - 16px))}}
@@ -520,17 +553,21 @@ input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px;cursor:po
 .gate{display:none}
 body.gated .app{display:none}
 body.gated .gate:not([hidden]){display:grid;place-items:center;min-height:100vh;padding:24px;position:relative;z-index:1}
-.gate-card{width:100%;max-width:420px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-pop);padding:36px 32px 30px;text-align:center}
-.gate-mono{display:inline-block;width:64px;height:64px;border-radius:16px;margin-bottom:18px}
-.gate-card h1{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
-.gate-card p{color:var(--ink-2);line-height:1.55;margin-bottom:22px}
+.gate-card{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-pop);padding:40px 36px 32px;text-align:left;position:relative}
+.gate-card::before,.gate-card::after{content:"";position:absolute;width:28px;height:28px;pointer-events:none}
+.gate-card::before{top:-1px;left:-1px;border-top:var(--geo-t) solid var(--accent);border-left:var(--geo-t) solid var(--accent)}
+.gate-card::after{right:-1px;bottom:-1px;border-right:var(--geo-t) solid var(--navy);border-bottom:var(--geo-t) solid var(--navy)}
+.gate-mono{display:inline-block;width:56px;height:56px;border-radius:var(--r-lg);margin-bottom:22px}
+.gate-card h1{font-size:26px;font-weight:800;letter-spacing:-.025em;line-height:1.15;margin-bottom:18px;color:var(--navy)}
+.gate-card h1::after{content:"";display:block;width:56px;height:4px;background:var(--accent);margin-top:14px}
+.gate-card p{color:var(--ink-2);line-height:1.6;margin-bottom:24px;font-size:14.5px}
 .gate-act{display:flex;flex-direction:column;gap:10px}
 .btn.lg{height:44px;font-size:15px;justify-content:center}
 #navOut[hidden],#mOut[hidden]{display:none!important}
 
 .xs-pop{display:flex;flex-direction:column;overflow:hidden}
 .xs-pop .xs-b{overflow:auto;flex:1;min-height:0}
-.xs-s{flex:none;margin:0 0 6px;width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:14px;background:var(--surface);color:var(--ink)}
+.xs-s{flex:none;margin:0 0 6px;width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:var(--r);font:inherit;font-size:14px;background:var(--surface);color:var(--ink)}
 .xs-s:focus{outline:0;border-color:var(--accent)}
 .xs-empty{padding:12px 11px;font-size:13px;color:var(--ink-3)}
 .xs-new{color:var(--accent);font-weight:600}
@@ -545,7 +582,7 @@ body.gated .gate:not([hidden]){display:grid;place-items:center;min-height:100vh;
 .mp-pop{padding:10px;width:248px}
 .mp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .mp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.mp-grid button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 0;font:inherit;font-size:13px;cursor:pointer}
+.mp-grid button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:var(--r);padding:8px 0;font:inherit;font-size:13px;cursor:pointer}
 .mp-grid button:hover{background:var(--surface-2)}
 .mp-grid button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 .mp-grid button.hoje:not(.on){border-color:var(--accent);color:var(--accent)}
@@ -658,11 +695,30 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
 .resumo-h{align-items:center}
 .resumo-h>div:nth-child(2){flex:1}
 .resumo-h b{font-size:17px}
-.resumo-logo{border-radius:9px;border:1px solid var(--line);background:#fff;flex:none}
+.resumo-logo{border-radius:var(--r);border:1px solid var(--line);background:#fff;flex:none}
 .resumo-r{text-align:right;font-size:12px}
 .ex-tbl tr{cursor:pointer}
 .ex-tbl tr:hover td{background:var(--surface-2)}
 @media print{.hlp,.vg-more,.sn-menu{display:none!important}.resumo .card{border:1px solid #ddd}body::before{display:none}@page{margin:14mm}}
+
+/* ---------- sincronização (nuvem): faixa de aviso, pergunta de conflito, pares chave/valor ---------- */
+#syncBar{position:sticky;top:56px;z-index:49;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;padding:9px 16px;font-size:13.5px;font-weight:600;line-height:1.35;color:#fff;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+#syncBar[hidden]{display:none}#syncBar.err{background:var(--neg)}#syncBar.warn{background:#B45309}
+#syncBar button{font:inherit;padding:5px 12px;border-radius:var(--r-sm);border:1px solid rgba(255,255,255,.75);background:transparent;color:#fff;cursor:pointer}
+.sync-ok{color:var(--pos)}
+.sync-sel{display:grid;gap:10px;margin:14px 0}
+.sync-sel label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;cursor:pointer}
+.sync-sel label:has(input:checked){border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.sync-sel small{display:block;color:var(--ink-2);font-weight:400;margin-top:2px}
+.sync-tab{width:100%;border-collapse:collapse;margin:8px 0 2px;font-size:13px}
+.sync-tab td,.sync-tab th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left}
+.kv{display:grid;gap:0}
+.kv>div{display:grid;grid-template-columns:minmax(140px,180px) 1fr;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px;align-items:baseline}
+.kv>div:last-child{border-bottom:0}
+.kv .k{color:var(--ink-2)}.kv .v{color:var(--ink);word-break:break-word}
+@media (max-width:600px){.kv>div{grid-template-columns:1fr;gap:2px}}
+/* arte de fundo só na tela de entrada; nas telas de trabalho o fundo fica limpo */
+body:not(.gated)::before{display:none}
 
 </style>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20512%20512%22%3E%3Cstyle%3E.b%7Bfill:%23132634%7D%40media%20%28prefers-color-scheme:dark%29%7B.b%7Bfill:%23EEF2F8%7D%7D%3C/style%3E%3Crect%20x=%2282%22%20y=%22300%22%20width=%2264%22%20height=%22140%22%20rx=%226%22%20class=%22b%22/%3E%3Crect%20x=%22172%22%20y=%22226%22%20width=%2264%22%20height=%22214%22%20rx=%226%22%20class=%22b%22/%3E%3Crect%20x=%22262%22%20y=%22164%22%20width=%2264%22%20height=%22276%22%20rx=%226%22%20class=%22b%22/%3E%3Crect%20x=%22352%22%20y=%22130%22%20width=%2264%22%20height=%22310%22%20rx=%226%22%20class=%22b%22/%3E%3Ccircle%20cx=%22384%22%20cy=%2284%22%20r=%2236%22%20fill=%22%23FF1243%22/%3E%3C/svg%3E">
@@ -691,10 +747,10 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <script src="supabase.js"></script>
 <script>/* js/core.js */
-/* Hub — núcleo: utilitários, armazenamento (local + OneDrive), shell, rotas, modais */
+/* Hub — núcleo: utilitários, armazenamento (local + Supabase), login Microsoft, shell, rotas, modais */
 (function () {
   "use strict";
-  const ERP = (window.ERP = { version: "v0.12.0", modules: [], defaults: {}, cfg: {} });
+  const ERP = (window.ERP = { version: "v0.13.0", modules: [], defaults: {}, cfg: {} });
 
   /* ---------- utilitários ---------- */
   const $ = (s, r) => (r || document).querySelector(s);
@@ -816,13 +872,18 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
     },
     get(n) { return this.docs[n]; },
     envelope(n) { return { app: "erp-rafael", doc: n, schema: 1, updatedAt: this.meta[n].updatedAt || new Date().toISOString(), data: this.docs[n] }; },
-    /* aplica uma alteração e agenda a gravação (local na hora, nuvem com atraso) */
+    /* aplica uma alteração e agenda a gravação (local na hora, nuvem com atraso).
+       Alteração sem mudança real (ex.: abrir uma tela que "sincroniza" lembretes já em dia) não conta:
+       nada fica pendente nem é enviado. Retorna true se houve mudança. */
     change(n, fn) {
+      let antes = null; try { antes = JSON.stringify(this.docs[n]); } catch (e) {}
       fn(this.docs[n]);
+      let depois = null; try { depois = JSON.stringify(this.docs[n]); } catch (e) {}
+      if (antes !== null && antes === depois) { this.listeners.forEach((f) => f(n)); return false; }
       this.meta[n].updatedAt = new Date().toISOString(); this.meta[n].dirty = true;
       lsSet("doc." + n, this.envelope(n)); lsSet("meta." + n, this.meta[n]);
       this.listeners.forEach((f) => f(n));
-      Cloud.schedule(n);
+      Cloud.schedule(n); return true;
     },
     replace(n, data, updatedAt) {
       this.docs[n] = data; this.meta[n].updatedAt = updatedAt || new Date().toISOString();
@@ -832,189 +893,288 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
     saveMeta(n) { lsSet("meta." + n, this.meta[n]); },
   });
 
-  /* ---------- nuvem: OneDrive pessoal via Microsoft Graph ---------- */
-  const GRAPH = "https://graph.microsoft.com/v1.0";
-  const FOLDER = "ERP Rafael";
-  const SCOPES_ADMIN = ["User.Read", "Files.ReadWrite"];
-  const SCOPES_GUEST = ["User.Read", "Files.ReadWrite.All"];   /* convidado lê/grava na pasta compartilhada por outra conta */
-  /* quem administra o acesso: guardado só como impressão digital (SHA-256), não em texto */
-  const ADMIN_HASH = "4bb8357fc7ef20f69637224863440426cd1adbc004c3ff7f697f82ee449d8861";
-  /* app "Hub" registrado num locatário próprio, só contas pessoais.
-     O ID do aplicativo não é segredo; pode ser trocado em Sistema › Dados e sincronização. */
-  const CLIENT_ID = "f45355ad-8d2b-4d0d-aba3-55b9ac8d2ed9";
+  /* ---------- nuvem: Supabase (Postgres + RLS). Login Microsoft via provedor Azure do Supabase ----------
+     Um registro por módulo, por usuário, na tabela public.docs (name, data, rev). A chave abaixo é pública;
+     quem protege os dados é a RLS (cada conta só enxerga as próprias linhas). Concorrência por "rev":
+     a gravação é condicionada ao rev que este aparelho conhece; se outro aparelho gravou antes, vira conflito
+     e o Hub junta em vez de sobrescrever. Anexos ficam no Supabase Storage (bucket privado, pasta por usuário). */
+  const SB_URL = "https://jglagrayubmcupmnobfe.supabase.co";
+  const SB_KEY = "sb_publishable_8bWnCJoiMhPdV-jW2XDvPQ_s0UvTOcN";
+  const PREFIX = "erp.rafael.";
+  const BUCKET = "anexos";
+  const sbClient = () => {
+    if (ERP.sb) return ERP.sb;
+    if (!window.supabase || !window.supabase.createClient) throw new Error("A biblioteca do Supabase não carregou.");
+    ERP.sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "pkce", storageKey: "erp.rafael.sb" } });
+    return ERP.sb;
+  };
+
+  /* ---- junção segura (nunca descarta o que só existe de um lado) ---- */
+  const clone = (o) => JSON.parse(JSON.stringify(o));
+  const hora = (iso) => { try { const d = new Date(iso); const h = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }); return d.toDateString() === new Date().toDateString() ? h : d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) + " " + h; } catch (e) { return ""; } };
+  const NOMES = { financas: "Finanças", reminders: "Reminders", investimentos: "Investimentos", patrimonio: "Patrimônio" };
+  const nome = (n) => NOMES[n] || n;
+  function semAuto(v) {
+    if (Array.isArray(v)) return v.filter((x) => !(x && typeof x === "object" && x.auto === true)).map(semAuto);
+    if (v && typeof v === "object") { const o = {}; Object.keys(v).sort().forEach((k) => { if (k !== "seq" && k !== "updatedAt" && k !== "dataIni") o[k] = semAuto(v[k]); }); return o; }
+    return v;
+  }
+  const igual = (a, b) => JSON.stringify(semAuto(a)) === JSON.stringify(semAuto(b));
+  function itensProprios(data, def, porChave) {
+    let t = 0; if (!data || typeof data !== "object") return 0;
+    Object.keys(data).forEach((k) => {
+      const v = data[k], dv = def && typeof def === "object" ? def[k] : undefined;
+      if (Array.isArray(v)) {
+        const ids = new Set((Array.isArray(dv) ? dv : []).map((x) => x && x.id));
+        const crus = new Set((Array.isArray(dv) ? dv : []).map((x) => JSON.stringify(x)));
+        const c = v.filter((x) => !(x && typeof x === "object" && x.auto === true)).filter((x) => (x && typeof x === "object" && "id" in x) ? !ids.has(x.id) : !crus.has(JSON.stringify(x))).length;
+        if (c) { t += c; if (porChave) porChave[k] = (porChave[k] || 0) + c; }
+      } else if (v && typeof v === "object") {
+        if (dv && typeof dv === "object" && !Array.isArray(dv) && !Object.keys(dv).length) { const c = Object.keys(v).length; if (c) { t += c; if (porChave) porChave[k] = (porChave[k] || 0) + c; } }
+        else t += itensProprios(v, dv, porChave);
+      }
+    });
+    return t;
+  }
+  const temDados = (n, data) => itensProprios(data === undefined ? Store.docs[n] : data, ERP.defaults[n]) > 0;
+  function resumo(data, n) {
+    const por = {}; itensProprios(data || {}, ERP.defaults[n], por);
+    const ROT = { lanc: "lançamentos", contas: "contas", cartoes: "cartões", tasks: "tarefas", lists: "listas", assets: "ativos", moves: "movimentações", items: "bens", dividas: "dívidas", metas: "metas", favorecidos: "favorecidos", series: "recorrências", categorias: "categorias", snapshots: "fotos do mês" };
+    return Object.keys(por).sort((a, b) => por[b] - por[a]).slice(0, 4).map((k) => { const r = ROT[k] || k; return por[k] + " " + (por[k] === 1 ? r.replace(/ões$/, "ão").replace(/s$/, "") : r); }).join(" · ") || "sem itens próprios";
+  }
+  function juntarItem(a, b, bMaisNovo) {
+    const o = {}; const keys = new Set(Object.keys(a).concat(Object.keys(b)));
+    keys.forEach((k) => {
+      if (!(k in a)) o[k] = clone(b[k]); else if (!(k in b)) o[k] = clone(a[k]);
+      else if (Array.isArray(a[k]) && Array.isArray(b[k])) o[k] = juntar(a[k], b[k]);
+      else if (a[k] && b[k] && typeof a[k] === "object" && typeof b[k] === "object" && !Array.isArray(a[k]) && !Array.isArray(b[k])) o[k] = juntarItem(a[k], b[k], bMaisNovo);
+      else o[k] = clone(bMaisNovo ? b[k] : a[k]);
+    });
+    return o;
+  }
+  function juntar(nuvem, local) {
+    if (Array.isArray(nuvem) && Array.isArray(local)) {
+      const comId = (a) => a.every((x) => x && typeof x === "object" && x.id != null);
+      if (comId(nuvem) && comId(local)) {
+        const by = new Map(nuvem.map((x) => [String(x.id), clone(x)]));
+        local.forEach((x) => { const k = String(x.id), a = by.get(k); if (!a) by.set(k, clone(x)); else by.set(k, juntarItem(a, clone(x), (x.updatedAt || 0) >= (a.updatedAt || 0))); });
+        return Array.from(by.values());
+      }
+      const vistos = new Set(nuvem.map((x) => JSON.stringify(x))); const out = clone(nuvem);
+      local.forEach((x) => { const j = JSON.stringify(x); if (!vistos.has(j)) { vistos.add(j); out.push(clone(x)); } });
+      return out;
+    }
+    if (nuvem && local && typeof nuvem === "object" && typeof local === "object" && !Array.isArray(nuvem) && !Array.isArray(local)) {
+      const o = clone(nuvem);
+      Object.keys(local).forEach((k) => { if (!(k in o)) o[k] = clone(local[k]); else if (typeof o[k] === "number" && typeof local[k] === "number" && /seq|num|count/i.test(k)) o[k] = Math.max(o[k], local[k]); else o[k] = juntar(o[k], local[k]); });
+      return o;
+    }
+    return local === undefined ? clone(nuvem) : clone(local);
+  }
+  ERP.syncJuntar = juntar; ERP.syncTemDados = temDados; ERP.syncResumo = resumo; ERP.syncHora = hora;
+
+  const pendentes = () => Store.names().filter((n) => Store.meta[n] && Store.meta[n].remote);
+  const sujos = () => Store.names().filter((n) => Store.meta[n] && Store.meta[n].dirty);
+  const marcarSalvo = () => lsSet("sync.ultimo", new Date().toISOString());
+  ERP.syncPendentes = pendentes; ERP.syncSujos = sujos;
+  function baixarBackup(sufixo) {
+    const docs = {}; Store.names().forEach((n) => (docs[n] = Store.get(n)));
+    ERP.download(`hub-backup-${sufixo || new Date().toISOString().slice(0, 10)}.json`, JSON.stringify({ app: "erp-rafael", version: ERP.version, savedAt: new Date().toISOString(), conta: Cloud.email(), docs }, null, 2));
+  }
+  /* faixa de aviso abaixo do topo: conflito aguardando escolha, sem internet, ou falha ao salvar */
+  function faixa() {
+    let el = $("#syncBar");
+    if (!el) { el = document.createElement("div"); el.id = "syncBar"; el.setAttribute("role", "status"); const tb = $("#topbar"); if (tb && tb.parentNode) tb.parentNode.insertBefore(el, tb.nextSibling); else document.body.prepend(el); }
+    let cls = "", html = "";
+    if (Cloud.account && pendentes().length) { cls = "warn"; html = `<span>Há dados diferentes neste aparelho e na nuvem (${esc(pendentes().map(nome).join(", "))}). Nada é gravado até você escolher.</span><button type="button" data-sb="escolher">Escolher</button>`; }
+    else if (Cloud.account && !navigator.onLine) { cls = "warn"; html = `<span>Sem internet. O que você lançar fica neste aparelho e sobe quando a conexão voltar.</span>`; }
+    else if (Cloud.account && Cloud.status === "err") { cls = "err"; html = `<span>Não está salvando na nuvem. O que você lançar está só neste aparelho.</span><button type="button" data-sb="tentar">Tentar de novo</button>`; }
+    el.className = cls; el.hidden = !html; el.innerHTML = html;
+    const b1 = $("[data-sb=escolher]", el); if (b1) b1.onclick = () => Cloud.askConflict(pendentes());
+    const b2 = $("[data-sb=tentar]", el); if (b2) b2.onclick = () => Cloud.sincronizarAgora();
+  }
+
   const Cloud = (ERP.Cloud = {
-    pca: null, account: null, status: "local", msg: "Somente neste aparelho", timers: {}, role: "anon",
-    cfg() { const c = lsGet("cloud", {}) || {}; return Object.assign({}, c, { clientId: (c.clientId || "").trim() || CLIENT_ID }); },
+    account: null, uid: null, status: "local", msg: "Somente neste aparelho", timers: {}, role: "anon",
     redirectUri() { return location.origin + location.pathname.replace(/index\.html$/, ""); },
-    setStatus(s, m) { this.status = s; this.msg = m; $$("#navOut,#mOut").forEach((e) => (e.hidden = !this.account)); $$(".sync").forEach((c) => { c.className = "chip sync " + (s === "ok" ? "ok" : s === "err" ? "err" : s === "busy" ? "warn" : ""); c.innerHTML = `<i></i><span>${esc(m)}</span>`; c.title = m; }); },
-    scopes() { return lsGet("share", null) ? SCOPES_GUEST : SCOPES_ADMIN; },
+    setStatus(s, m) {
+      if (s === "ok" && pendentes().length) { s = "busy"; m = "Aguardando sua escolha"; }
+      else if (s === "ok") { const u = lsGet("sync.ultimo", null); m = "Salvo na nuvem" + (u ? " · " + hora(u) : ""); }
+      else if (s === "busy" && !m) m = "Alterações pendentes…";
+      this.status = s; this.msg = m;
+      $$("#navOut,#mOut").forEach((e) => (e.hidden = !this.account));
+      $$(".sync").forEach((c) => { c.className = "chip sync " + (s === "ok" ? "ok" : s === "err" ? "err" : s === "busy" ? "warn" : ""); c.innerHTML = `<i></i><span>${esc(m)}</span>`; c.title = m; });
+      try { faixa(); } catch (e) {}
+    },
     email() { return ((this.account && this.account.username) || "").trim().toLowerCase(); },
     firstName() { const n = ((this.account && this.account.name) || "").trim(); return n && !n.includes("@") ? n.split(/\s+/)[0] : ""; },
-    async sha(t) { try { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return Array.from(new Uint8Array(b)).map((x) => x.toString(16).padStart(2, "0")).join(""); } catch (e) { return ""; } },
-    /* link de convite: #/entrar?d=<drive>&i=<pasta>. Fica guardado neste navegador e some da barra de endereço. */
-    captureInvite() {
-      const m = (location.hash || "").match(/^#\/entrar\?(.*)$/); if (!m) return;
-      const p = new URLSearchParams(m[1]); const d = p.get("d"), i = p.get("i");
-      if (d && i) lsSet("share", { d, i });
-      try { history.replaceState(null, "", location.pathname + "#/inicio"); } catch (e) {}
-    },
-    /* decide o papel da conta: admin (dono da pasta), guest (e-mail na lista de acesso) ou bloqueado */
-    async authorize() {
-      const em = this.email(); const u = lsGet("user", null);
-      if (u && u !== em) { Store.names().forEach((n) => { try { localStorage.removeItem(LS("doc." + n)); localStorage.removeItem(LS("meta." + n)); } catch (e) {} }); Store.load(); }
-      lsSet("user", em);
-      if (em && (await this.sha(em)) === ADMIN_HASH) { this.role = "admin"; return true; }
-      const s = lsGet("share", null);
-      if (!s) { this.role = "nolink"; return false; }
-      const r = await this.api(`/drives/${s.d}/items/${s.i}:/acesso.json:/content`);
-      if (r.status === 401) throw new Error("sessão");
-      if (!r.ok) { this.role = "denied"; return false; }
-      const a = await r.json().catch(() => ({}));
-      const ok = (a.users || []).some((x) => (x.email || "").trim().toLowerCase() === em);
-      this.role = ok ? "guest" : "denied"; return ok;
+    exportarBackup() { baixarBackup(); },
+    ultimoSalvamento() { return lsGet("sync.ultimo", null); },
+
+    /* ---- login (Microsoft, pelo Supabase) ---- */
+    setAccount(user) {
+      this.uid = user ? user.id : null;
+      this.account = user ? { username: (user.email || "").toLowerCase(), name: (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || (user.email || "") } : null;
+      this.role = user ? "user" : "anon";
     },
     async init() {
-      this.captureInvite();
-      const cfg = this.cfg();
-      if (!cfg.clientId || typeof msal === "undefined") { this.setStatus("local", "Somente neste aparelho"); ERP.gate(null); return; }
       try {
-        this.pca = new msal.PublicClientApplication({ auth: { clientId: cfg.clientId, authority: "https://login.microsoftonline.com/consumers", redirectUri: this.redirectUri(), navigateToLoginRequestUrl: false }, cache: { cacheLocation: "localStorage" } });
-        await this.pca.initialize();
-        const r = await this.pca.handleRedirectPromise();
-        if (r && r.account) this.pca.setActiveAccount(r.account);
-        this.account = this.pca.getActiveAccount() || this.pca.getAllAccounts()[0] || null;
-        if (!this.account) { this.setStatus("local", "Entrar para sincronizar"); ERP.gate("login"); return; }
-        this.pca.setActiveAccount(this.account);
-        if (await this.authorize()) { ERP.gate(null); this.setStatus("busy", "Sincronizando…"); await this.pullAll(); }
-        else { this.setStatus("err", "Acesso não liberado"); ERP.gate(this.role); }
-      } catch (e) { console.error(e); this.setStatus("err", "Erro de login: " + (e.errorCode || e.message)); ERP.gate("erro", e.errorCode || e.message); }
+        const sb = sbClient();
+        const { data } = await sb.auth.getSession();
+        const session = data && data.session;
+        sb.auth.onAuthStateChange((evt) => { if (evt === "SIGNED_OUT") this.setAccount(null); });
+        if (!session) { this.setAccount(null); this.setStatus("local", "Entrar para sincronizar"); ERP.gate("login"); return; }
+        this.setAccount(session.user);
+        /* trocou de conta neste navegador: guarda cópia do que havia e começa limpo */
+        const em = this.email(), u = lsGet("user", null);
+        if (u && u !== em) { if (Store.names().some((n) => temDados(n))) try { baixarBackup("conta-anterior"); } catch (e) {} Store.names().forEach((n) => { try { localStorage.removeItem(PREFIX + "doc." + n); localStorage.removeItem(PREFIX + "meta." + n); } catch (e) {} }); Store.load(); }
+        lsSet("user", em);
+        ERP.gate(null); this.setStatus("busy", "Sincronizando…");
+        await this.pullAll();
+      } catch (e) { console.error(e); this.setStatus("err", "Erro de login"); ERP.gate("erro", e.message || String(e)); }
     },
-    login() { if (!this.pca) { toast("Informe o ID do aplicativo em Sistema › Dados e sincronização."); return; } this.pca.loginRedirect({ scopes: this.scopes(), prompt: "select_account" }); },
-    logout() { if (this.pca && this.account) this.pca.logoutRedirect({ account: this.account, postLogoutRedirectUri: this.redirectUri() }); },
-    async token() {
-      const req = { scopes: this.scopes(), account: this.account };
-      try { return (await this.pca.acquireTokenSilent(req)).accessToken; }
-      catch (e) { await this.pca.acquireTokenRedirect(req); return null; }
+    async login() { try { await sbClient().auth.signInWithOAuth({ provider: "azure", options: { scopes: "openid email profile", redirectTo: this.redirectUri() } }); } catch (e) { toast("Não foi possível iniciar o login: " + e.message); } },
+    async logout() { try { await sbClient().auth.signOut(); } catch (e) {} try { lsSet("user", null); } catch (e) {} location.reload(); },
+    async token() { const { data } = await sbClient().auth.getSession(); return data && data.session ? data.session.access_token : null; },
+
+    /* ---- dados: tabela docs ---- */
+    async readRow(n) {
+      const { data, error } = await sbClient().from("docs").select("data,rev").eq("name", n).maybeSingle();
+      if (error) throw new Error("ler " + (error.code || error.message || ""));
+      return data;   /* {data, rev} | null */
     },
-    async api(path, opt) {
-      const t = await this.token(); if (!t) throw new Error("Sessão expirada");
-      const h = Object.assign({ Authorization: "Bearer " + t }, (opt && opt.headers) || {});
-      const res = await fetch(GRAPH + path, Object.assign({}, opt, { headers: h }));
-      return res;
-    },
-    pathOf(n) { const s = this.role === "guest" ? lsGet("share", null) : null; return s ? `/drives/${s.d}/items/${s.i}:/${n}.json` : `/me/drive/root:/${encodeURIComponent(FOLDER)}/${n}.json`; },
-    /* ---- só administrador: pasta, lista de acesso e convites (permissão de pasta no OneDrive) ---- */
-    async folder() {
-      if (this._folder) return this._folder;
-      let r = await this.api(`/me/drive/root:/${encodeURIComponent(FOLDER)}?select=id,parentReference`);
-      if (r.status === 404) r = await this.api("/me/drive/root/children", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: FOLDER, folder: {}, "@microsoft.graph.conflictBehavior": "fail" }) });
-      if (!r.ok) throw new Error("pasta " + r.status);
-      const j = await r.json(); this._folder = { id: j.id, drive: (j.parentReference || {}).driveId }; return this._folder;
-    },
-    async inviteLink() { const f = await this.folder(); return `${this.redirectUri()}#/entrar?d=${encodeURIComponent(f.drive)}&i=${encodeURIComponent(f.id)}`; },
-    async acessoLoad() {
-      const f = await this.folder(); const r = await this.api(`/me/drive/items/${f.id}:/acesso.json:/content`);
-      if (r.status === 404) return { app: "erp-rafael", doc: "acesso", users: [] };
-      if (!r.ok) throw new Error("acesso " + r.status);
-      const a = await r.json(); a.users = a.users || []; return a;
-    },
-    async acessoSave(a) {
-      const r = await this.api(`/me/drive/root:/${encodeURIComponent(FOLDER)}/acesso.json:/content?@microsoft.graph.conflictBehavior=replace`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(a) });
-      if (!r.ok) throw new Error("salvar acesso " + r.status);
-    },
-    async liberar(email) {
-      email = String(email || "").trim().toLowerCase();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("E-mail inválido.");
-      if ((await this.sha(email)) === ADMIN_HASH) throw new Error("Este é o e-mail do administrador, que já tem acesso.");
-      const a = await this.acessoLoad(); if (a.users.some((u) => u.email === email)) throw new Error("Este e-mail já está liberado.");
-      const f = await this.folder();
-      const body = (send) => JSON.stringify({ recipients: [{ email }], message: "Acesso ao Hub", requireSignIn: true, sendInvitation: send, roles: ["write"] });
-      let r = await this.api(`/me/drive/items/${f.id}/invite`, { method: "POST", headers: { "Content-Type": "application/json" }, body: body(false) });
-      if (!r.ok) r = await this.api(`/me/drive/items/${f.id}/invite`, { method: "POST", headers: { "Content-Type": "application/json" }, body: body(true) });
-      if (!r.ok) throw new Error("A Microsoft não aceitou o convite (" + r.status + ").");
-      const j = await r.json().catch(() => ({})); const perm = (j.value || [])[0] || {};
-      if (perm.error) throw new Error(perm.error.message || "A Microsoft não aceitou o convite.");
-      a.users.push({ email, addedAt: new Date().toISOString(), permId: perm.id || null });
-      a.updatedAt = new Date().toISOString(); await this.acessoSave(a); return a;
-    },
-    async revogar(email) {
-      const a = await this.acessoLoad(); const u = a.users.find((x) => x.email === email); if (!u) return a;
-      const f = await this.folder();
-      if (u.permId) { const r = await this.api(`/me/drive/items/${f.id}/permissions/${u.permId}`, { method: "DELETE" }); if (!r.ok && r.status !== 404) throw new Error("A Microsoft não removeu o acesso (" + r.status + ")."); }
-      a.users = a.users.filter((x) => x.email !== email); a.updatedAt = new Date().toISOString(); await this.acessoSave(a); return a;
-    },
-    async pullAll() {
-      let conflicts = [];
-      for (const n of Store.names()) {
-        try { const c = await this.pull(n); if (c) conflicts.push(n); } catch (e) { console.error(n, e); this.setStatus("err", "Falha ao ler " + n); return; }
-      }
-      this.setStatus("ok", "Sincronizado " + new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }));
-      if (conflicts.length) this.askConflict(conflicts);
-      ERP.render();
-    },
-    /* lê um arquivo avulso da pasta do Hub no OneDrive (ex.: ibkr.json gravado por um robô). Retorna o JSON ou null. */
-    async readFile(fname) {
-      if (!this.account) return null;
-      try {
-        const s = this.role === "guest" ? lsGet("share", null) : null;
-        const base = s ? `/drives/${s.d}/items/${s.i}:/${fname}` : `/me/drive/root:/${encodeURIComponent(FOLDER)}/${fname}`;
-        const r = await this.api(base + ":/content");
-        if (r.status === 404) return null;
-        if (!r.ok) throw new Error("GET " + r.status);
-        return await r.json();
-      } catch (e) { console.error("readFile", fname, e); return null; }
-    },
-    /* envia um arquivo para a pasta do Hub no OneDrive (ex.: Comprovantes/2026/11/x.pdf). Retorna {id,name,webUrl} ou lança erro. */
-    async uploadFile(relPath, file) {
-      if (!this.account) throw new Error("Entre com a Microsoft para anexar.");
-      const s = this.role === "guest" ? lsGet("share", null) : null;
-      const base = s ? `/drives/${s.d}/items/${s.i}:/${relPath}` : `/me/drive/root:/${encodeURIComponent(FOLDER)}/${relPath}`;
-      const r = await this.api(base + ":/content?@microsoft.graph.conflictBehavior=rename", { method: "PUT", headers: { "Content-Type": file.type || "application/octet-stream" }, body: file });
-      if (!r.ok) throw new Error("Upload " + r.status);
-      const j = await r.json(); return { id: j.id, name: j.name, webUrl: j.webUrl, size: j.size };
-    },
-    async deleteItem(id) { try { const r = await this.api(`/me/drive/items/${id}`, { method: "DELETE" }); return r.ok || r.status === 404; } catch (e) { return false; } },
-    /* retorna true se há conflito (alterações locais e na nuvem) */
+    aceitar(n, row) { const meta = Store.meta[n]; Store.replace(n, row.data, new Date().toISOString()); meta.rev = row.rev; meta.dirty = false; delete meta.remote; Store.saveMeta(n); },
+    /* retorna true quando há conflito aguardando escolha */
     async pull(n) {
       const meta = Store.meta[n];
-      const r = await this.api(this.pathOf(n) + "?select=id,eTag,lastModifiedDateTime");
-      if (r.status === 404) { if (Store.meta[n].updatedAt) await this.push(n, true); return false; }
-      if (!r.ok) throw new Error("GET " + r.status);
-      const it = await r.json();
-      if (meta.etag === it.eTag && !meta.dirty) return false;
-      const c = await this.api(this.pathOf(n) + ":/content");
-      if (!c.ok) throw new Error("content " + c.status);
-      const env = await c.json();
-      if (meta.dirty && meta.etag && meta.etag !== it.eTag) { meta.remote = { env, etag: it.eTag }; return true; }
-      if (!meta.updatedAt || !env.updatedAt || env.updatedAt >= meta.updatedAt || !meta.dirty) { Store.replace(n, env.data, env.updatedAt); meta.etag = it.eTag; meta.dirty = false; Store.saveMeta(n); }
-      else await this.push(n, true);
-      return false;
+      const row = await this.readRow(n);
+      if (!row) { if (meta.rev != null) { meta.rev = null; Store.saveMeta(n); } if (temDados(n) || meta.dirty) await this.push(n, true, true); return false; }
+      if (meta.remote) return true;
+      if (meta.rev === row.rev) { if (meta.dirty) await this.push(n); return false; }
+      if (meta.rev == null) {
+        if (!temDados(n) || igual(row.data, Store.docs[n])) { this.aceitar(n, row); return false; }
+        if (!temDados(n, row.data)) { meta.rev = row.rev; Store.saveMeta(n); await this.push(n); return false; }
+        meta.remote = { data: row.data, rev: row.rev, primeira: true }; Store.saveMeta(n); return true;
+      }
+      if (!meta.dirty) { this.aceitar(n, row); return false; }
+      if (igual(row.data, Store.docs[n])) { meta.rev = row.rev; meta.dirty = false; Store.saveMeta(n); return false; }
+      meta.remote = { data: row.data, rev: row.rev }; Store.saveMeta(n); return true;
     },
     schedule(n) {
       if (!this.account) return;
+      const meta = Store.meta[n]; if (meta && meta.remote) { faixa(); return; }
       clearTimeout(this.timers[n]); this.setStatus("busy", "Alterações pendentes…");
-      this.timers[n] = setTimeout(() => this.push(n).catch(() => {}), 2500);
+      this.timers[n] = setTimeout(() => { delete this.timers[n]; this.push(n).catch(() => {}); }, 1500);
     },
-    async push(n, force) {
+    async push(n, force, criar) {
       if (!this.account) return;
       const meta = Store.meta[n];
+      if (meta.remote) { faixa(); return; }
+      if (meta.rev == null && !criar) { const c = await this.pull(n); if (c) this.askConflict([n]); return; }
       try {
-        this.setStatus("busy", "Salvando no OneDrive…");
-        const headers = { "Content-Type": "application/json" };
-        if (meta.etag && !force) headers["If-Match"] = meta.etag;
-        const r = await this.api(this.pathOf(n) + ":/content?@microsoft.graph.conflictBehavior=replace", { method: "PUT", headers, body: JSON.stringify(Store.envelope(n)) });
-        if (r.status === 412) { await this.pull(n).then((c) => c && this.askConflict([n])); return; }
-        if (!r.ok) throw new Error("PUT " + r.status);
-        const it = await r.json(); meta.etag = it.eTag; meta.dirty = false; Store.saveMeta(n);
-        this.setStatus("ok", "Sincronizado " + new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }));
-      } catch (e) { console.error(e); this.setStatus("err", "Não salvou na nuvem (dados seguros neste aparelho)"); throw e; }
+        this.setStatus("busy", "Salvando…");
+        const payload = Store.docs[n];
+        if (meta.rev == null) {
+          const { data, error } = await sbClient().from("docs").insert({ name: n, data: payload, rev: 1 }).select("rev").maybeSingle();
+          if (error) { if (String(error.code) === "23505") { const c = await this.pull(n); if (c) this.askConflict([n]); return; } throw new Error("inserir " + error.code); }
+          meta.rev = (data && data.rev) || 1;
+        } else {
+          const { data, error } = await sbClient().from("docs").update({ data: payload, rev: meta.rev + 1 }).eq("name", n).eq("rev", meta.rev).select("rev");
+          if (error) throw new Error("salvar " + error.code);
+          if (!data || !data.length) { const c = await this.pull(n); if (c) this.askConflict([n]); else this.setStatus("ok"); return; }
+          meta.rev = data[0].rev;
+        }
+        meta.dirty = false; Store.saveMeta(n); marcarSalvo();
+        this.setStatus(sujos().length ? "busy" : "ok");
+      } catch (e) { console.error(e); this.setStatus("err", "Não salvou (dados seguros neste aparelho)"); throw e; }
     },
+    async pullAll() {
+      if (this._puxando) return this._puxando;
+      this._puxando = (async () => {
+        const conflicts = []; this.setStatus("busy", "Sincronizando…");
+        for (const n of Store.names()) {
+          try { if (await this.pull(n)) conflicts.push(n); }
+          catch (e) { console.error(n, e); this.setStatus("err", "Falha ao ler " + nome(n)); ERP.render(); return; }
+        }
+        if (!sujos().length) marcarSalvo();
+        this.setStatus("ok"); ERP.render();
+        if (conflicts.length) this.askConflict(conflicts);
+      })();
+      try { return await this._puxando; } finally { this._puxando = null; this._ultimaLeitura = Date.now(); }
+    },
+    async sincronizarAgora() {
+      await this.pullAll();
+      for (const n of Store.names()) if (Store.meta[n].dirty && !Store.meta[n].remote) await this.push(n).catch(() => {});
+      ERP.render();
+    },
+    /* a pergunta: nunca troca dados em silêncio */
     askConflict(list) {
-      const m = modal(`<h2>Alterações em dois lugares</h2><p>Os módulos <b>${esc(list.join(", "))}</b> foram alterados neste aparelho e também no OneDrive. Qual versão manter?</p><div class="act"><span class="sp"></span><button class="btn ghost" data-cloud>Usar a do OneDrive</button><button class="btn orange" data-local>Manter a deste aparelho</button></div>`, { noFocus: true });
-      $("[data-cloud]", m.el).onclick = () => { list.forEach((n) => { const r = Store.meta[n].remote; if (r) { Store.replace(n, r.env.data, r.env.updatedAt); Store.meta[n].etag = r.etag; Store.meta[n].dirty = false; delete Store.meta[n].remote; Store.saveMeta(n); } }); m.close(); ERP.render(); };
-      $("[data-local]", m.el).onclick = async () => { for (const n of list) { delete Store.meta[n].remote; await this.push(n, true); } m.close(); };
+      list = (list || []).filter((n) => Store.meta[n] && Store.meta[n].remote);
+      if (!list.length || this._perguntando) { faixa(); return; }
+      this._perguntando = true; faixa();
+      const primeira = list.some((n) => Store.meta[n].remote.primeira);
+      const linhas = list.map((n) => `<tr><td><b>${esc(nome(n))}</b></td><td>${esc(resumo(Store.docs[n], n))}</td><td>${esc(resumo(Store.meta[n].remote.data, n))}</td></tr>`).join("");
+      const m = modal(`<h2>${primeira ? "Este aparelho tem dados que não estão na nuvem" : "Alterações em dois lugares"}</h2>
+        <p>${primeira ? "Este aparelho já tinha dados antes de entrar, e a nuvem também tem dados." : "Estes módulos foram alterados neste aparelho e também na nuvem, por outro aparelho."} Nada foi trocado. Escolha o que fazer:</p>
+        <table class="sync-tab"><thead><tr><th>Módulo</th><th>Neste aparelho</th><th>Na nuvem</th></tr></thead><tbody>${linhas}</tbody></table>
+        <div class="sync-sel">
+          <label><input type="radio" name="sOp" value="juntar" checked><span><b>Juntar os dois (recomendado)</b><small>Mantém tudo dos dois lados.</small></span></label>
+          <label><input type="radio" name="sOp" value="nuvem"><span><b>Usar só o da nuvem</b><small>Os dados deste aparelho são trocados pelos da nuvem.</small></span></label>
+          <label><input type="radio" name="sOp" value="local"><span><b>Usar só o deste aparelho</b><small>Os dados da nuvem são trocados pelos deste aparelho.</small></span></label>
+        </div>
+        <p class="mut" style="font-size:12.5px">Antes de aplicar, o Hub baixa uma cópia (.json) do que for substituído.</p>
+        <div class="act"><button class="btn ghost" data-depois>Decidir depois</button><span class="sp"></span><button class="btn orange" data-ok>Aplicar</button></div>`, { noFocus: true });
+      const fechar = () => { this._perguntando = false; m.close(); faixa(); };
+      $("[data-depois]", m.el).onclick = fechar;
+      const obs = new MutationObserver(() => { if (!document.body.contains(m.el)) { this._perguntando = false; obs.disconnect(); faixa(); } });
+      obs.observe(document.body, { childList: true });
+      $("[data-ok]", m.el).onclick = async (ev) => {
+        const op = ($("input[name=sOp]:checked", m.el) || {}).value || "juntar";
+        ev.target.disabled = true; ev.target.textContent = "Aplicando…";
+        try {
+          for (const n of list) {
+            const meta = Store.meta[n], rem = meta.remote; if (!rem) continue;
+            if (op === "nuvem") { baixarBackup(n + "-aparelho"); this.aceitar(n, rem); }
+            else if (op === "local") { baixarBackup(n + "-nuvem"); delete meta.remote; meta.rev = rem.rev; meta.dirty = true; Store.saveMeta(n); await this.push(n); }
+            else { baixarBackup(n + "-aparelho"); baixarBackup(n + "-nuvem"); const junto = juntar(rem.data, Store.docs[n]); delete meta.remote; meta.rev = rem.rev; Store.saveMeta(n); Store.replace(n, junto, new Date().toISOString()); meta.dirty = true; Store.saveMeta(n); await this.push(n); }
+          }
+          fechar(); this.setStatus(sujos().length ? "busy" : "ok"); ERP.render(); toast(op === "juntar" ? "Dados juntados e salvos na nuvem." : "Pronto. Cópia de segurança baixada.");
+        } catch (e) { console.error(e); ev.target.disabled = false; ev.target.textContent = "Aplicar"; toast("Não foi possível aplicar: " + e.message); }
+      };
+    },
+
+    /* ---- arquivos: anexos no Supabase Storage (pasta privada do usuário) e leitura avulsa (ex.: ibkr) ---- */
+    async uploadFile(relPath, file) {
+      if (!this.account || !this.uid) throw new Error("Entre com a Microsoft para anexar.");
+      const path = `${this.uid}/${String(relPath).replace(/^\/+/, "")}`;
+      const { error } = await sbClient().storage.from(BUCKET).upload(path, file, { contentType: file.type || "application/octet-stream", upsert: false });
+      if (error) throw new Error(error.message || "Upload falhou");
+      return { id: path, name: file.name, path, size: file.size };
+    },
+    async fileUrl(path) {
+      const { data, error } = await sbClient().storage.from(BUCKET).createSignedUrl(path, 3600);
+      if (error || !data) throw new Error((error && error.message) || "Arquivo não encontrado");
+      return data.signedUrl;
+    },
+    async deleteItem(path) {
+      if (!path || !String(path).includes("/")) return false;
+      try { const { error } = await sbClient().storage.from(BUCKET).remove([path]); return !error; } catch (e) { return false; }
+    },
+    /* lê um registro avulso da tabela docs (ex.: "ibkr.json" → name "ibkr"), gravado por um robô ou importado. Retorna o JSON ou null. */
+    async readFile(fname) {
+      if (!this.account) return null;
+      try { const row = await this.readRow(String(fname).replace(/\.json$/i, "")); return row ? row.data : null; } catch (e) { console.warn("readFile", fname, String(e.message || e)); return null; }
     },
   });
+  /* celular: envia ao sair da tela, confere ao voltar; sem internet avisa e retoma quando voltar */
+  document.addEventListener("visibilitychange", () => {
+    if (!Cloud.account) return;
+    if (document.visibilityState === "hidden") { Object.keys(Cloud.timers).forEach((n) => { clearTimeout(Cloud.timers[n]); delete Cloud.timers[n]; }); sujos().forEach((n) => { if (!Store.meta[n].remote) Cloud.push(n).catch(() => {}); }); }
+    else if (!Cloud._ultimaLeitura || Date.now() - Cloud._ultimaLeitura > 30000) { Cloud.pullAll().catch(() => {}); }
+  });
+  window.addEventListener("offline", () => faixa());
+  window.addEventListener("online", () => { faixa(); if (Cloud.account) Cloud.sincronizarAgora().catch(() => {}); });
+  window.addEventListener("beforeunload", (e) => { if (Cloud.account && (sujos().length || Object.keys(Cloud.timers).length)) { e.preventDefault(); e.returnValue = ""; } });
 
   /* ---------- módulos, shell e rotas ---------- */
   ERP.register = (mod) => ERP.modules.push(mod);
@@ -1108,11 +1268,20 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
     }
     const body = document.createElement("div"); main.appendChild(body);
     try { (page ? page.render : mod.render)(body, { mod, page }); } catch (e) { console.error(e); body.innerHTML = `<div class="note err">Não foi possível abrir esta tela: ${esc(e.message)}</div>`; }
-    ERP.iconify(body);
+    ERP.iconify(body); ERP.marcarTabelas(body);
     document.title = (page && mod.pages && mod.pages.length > 1 ? page.label + " · " : "") + (mod.short || mod.label) + " · Hub";
   };
-  /* re-renderizações parciais dentro das telas também ganham ícones */
-  new MutationObserver((ms) => { if (ERP._iconBusy) return; ERP._iconBusy = true; try { ms.forEach((m) => m.addedNodes.forEach((n) => { if (n.nodeType === 1 && !(n.closest && n.closest("svg"))) ERP.iconify(n); })); } finally { ERP._iconBusy = false; } }).observe(document.getElementById("main") || document.documentElement, { childList: true, subtree: true });
+  /* tabelas largas (padrão v0.14.43 do ERP NMB): 1ª coluna fixa e aviso "role para o lado" só quando há rolagem lateral */
+  ERP.marcarTabelas = (root) => {
+    $$(".tw", root || document).forEach((tw) => {
+      const wide = tw.scrollWidth > tw.clientWidth + 8; tw.classList.toggle("wide", wide);
+      let h = tw.querySelector(":scope > .tw-hint");
+      if (wide && !h) { h = document.createElement("div"); h.className = "tw-hint"; h.textContent = "Role para o lado para ver todas as colunas ›"; tw.appendChild(h); }
+    });
+  };
+  window.addEventListener("resize", () => ERP.marcarTabelas());
+  /* re-renderizações parciais dentro das telas também ganham ícones e a marcação de tabela larga */
+  new MutationObserver((ms) => { if (ERP._iconBusy) return; ERP._iconBusy = true; try { ms.forEach((m) => m.addedNodes.forEach((n) => { if (n.nodeType === 1 && !(n.closest && n.closest("svg"))) { ERP.iconify(n); if (n.matches && (n.matches(".tw") || n.querySelector(".tw"))) ERP.marcarTabelas(n); } })); } finally { ERP._iconBusy = false; } }).observe(document.getElementById("main") || document.documentElement, { childList: true, subtree: true });
   /* ---------- glossário: termos técnicos explicados em linguagem simples (botão "?" ao lado do termo) ---------- */
   ERP.GLOSS = {
     regimeCaixa: ["Regime de caixa", "Conta o dinheiro quando ele realmente entra ou sai da conta (pela data do pagamento/recebimento). Compras no cartão entram quando a fatura é paga."],
@@ -1243,18 +1412,15 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
   ERP.blobBytes = (b) => b.arrayBuffer().then((a) => new Uint8Array(a));
 
 
-  /* tela de entrada: bloqueia o sistema até a conta Microsoft ser reconhecida e liberada */
+  /* tela de entrada: bloqueia o sistema até a conta Microsoft entrar (cada conta vê só os próprios dados) */
   ERP.gate = function (kind, detail) {
     const g = $("#gate"); if (!g) return;
     if (!kind) { g.hidden = true; document.body.classList.remove("gated"); return; }
     document.body.classList.add("gated"); g.hidden = false;
     const mark = ($(".mono svg") || {}).outerHTML || "";
-    const em = esc(Cloud.email());
     const T = {
       wait: ["Verificando acesso", "Só um instante.", ""],
-      login: ["Entrar no Hub", "Acesso restrito. Entre com a conta Microsoft liberada pelo administrador.", '<button class="btn orange lg" data-g="in">Entrar com Microsoft</button>'],
-      nolink: ["Falta o link de acesso", `A conta <b>${em}</b> entrou, mas este navegador ainda não tem o link de acesso. Peça o link ao administrador, abra-o aqui e entre de novo.`, '<button class="btn ghost lg" data-g="out">Sair e Trocar de Conta</button>'],
-      denied: ["Acesso não liberado", `A conta <b>${em}</b> não está na lista de acesso. Peça ao administrador para liberar este e-mail.`, '<button class="btn ghost lg" data-g="out">Sair e Trocar de Conta</button>'],
+      login: ["Entrar no Hub", "Seu painel pessoal de finanças, investimentos, patrimônio e demandas. Entre com sua conta Microsoft; os dados ficam na nuvem e sincronizam em todos os seus aparelhos.", '<button class="btn orange lg" data-g="in">Entrar com Microsoft</button>'],
       erro: ["Não foi possível entrar", esc(detail || "Erro desconhecido") + ". Verifique a internet e tente de novo.", '<button class="btn orange lg" data-g="retry">Tentar de novo</button><button class="btn ghost lg" data-g="out">Sair</button>'],
     }[kind] || ["", "", ""];
     g.innerHTML = `<div class="gate-card"><span class="mono gate-mono">${mark}</span><h1>${T[0]}</h1><p>${T[1]}</p><div class="gate-act">${T[2]}</div></div>`;
@@ -1288,7 +1454,6 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
     ERP.render();
     try { if ("serviceWorker" in navigator && location.protocol === "https:" && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register("sw.js"); } catch (e) {}   /* app instalável (PWA) */
     await Cloud.init();
-    window.addEventListener("online", () => Cloud.account && Store.names().forEach((n) => Store.meta[n].dirty && Cloud.schedule(n)));
   };
 })();
 
@@ -2217,7 +2382,7 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
     else if (!l.serieId && ["despesa", "receita", "compra"].includes(l.tipo)) fields.push({ k: "repetir", label: "Recorrência", type: "select", value: "0", options: [["0", "Não se Repete"]].concat(FREQ), hint: "Transformar este lançamento em recorrente, a partir deste mês." }, { k: "duracao", label: "Por Quanto Tempo", type: "select", value: "0", options: [["0", "Sempre (sem fim)"], ["3", "Por 3 Vezes"], ["6", "Por 6 Vezes"], ["12", "Por 12 Vezes"], ["24", "Por 24 Vezes"]] });
     else if (serie) fields.push({ k: "repetir", label: "Recorrência", type: "select", value: String(serie.passo || 1), options: FREQ, hint: `Este lançamento faz parte de uma recorrência ${freqLabel(serie.passo)}${serie.fim ? " · termina em " + monthLabel(monthKey(serie.fim)) : " · sem data de fim"}. Mudar aqui altera a frequência de toda a série a partir deste mês.` });
     fields.push({ k: "jaPago", label: "Já Foi Pago / Recebido", type: "checkbox", value: novo ? false : !!l.pago }, { k: "notas", label: "Anotações", value: l.notas, full: true });
-    if (!novo) fields.push({ type: "html", k: "_anx", html: `<div class="anx"><label>Comprovantes e Documentos</label>${(l.anexos || []).length ? `<div class="anx-list">${l.anexos.map((a) => `<a class="anx-it" href="${esc(a.url)}" target="_blank" rel="noopener">📎 ${esc(a.name)}</a><button type="button" class="ib del" data-anx-del="${esc(a.id)}" title="Remover">✕</button>`).join("")}</div>` : `<div class="mut" style="font-size:12px">Nenhum anexo.</div>`}${ERP.Cloud && ERP.Cloud.account ? `<div class="toolbar" style="margin-top:8px"><label class="btn ghost sm" style="cursor:pointer">Anexar comprovante / nota <input type="file" data-anx-file hidden accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.xml"></label><span class="mut" style="font-size:11.5px">vai para OneDrive › Comprovantes/${(l.venc || l.comp || "").slice(0, 7).replace("-", "/")}</span></div>` : `<div class="mut" style="font-size:11.5px">Entre com a Microsoft para anexar no OneDrive.</div>`}</div>` });
+    if (!novo) fields.push({ type: "html", k: "_anx", html: `<div class="anx"><label>Comprovantes e Documentos</label>${(l.anexos || []).length ? `<div class="anx-list">${l.anexos.map((a) => `<a class="anx-it" href="${a.path ? "#" : esc(a.url || "#")}" ${a.path ? `data-anx-open="${esc(a.path)}"` : 'target="_blank" rel="noopener"'}>📎 ${esc(a.name)}</a><button type="button" class="ib del" data-anx-del="${esc(a.id)}" title="Remover">✕</button>`).join("")}</div>` : `<div class="mut" style="font-size:12px">Nenhum anexo.</div>`}${ERP.Cloud && ERP.Cloud.account ? `<div class="toolbar" style="margin-top:8px"><label class="btn ghost sm" style="cursor:pointer">Anexar comprovante / nota <input type="file" data-anx-file hidden accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.xml"></label><span class="mut" style="font-size:11.5px">guardado na nuvem, só na sua conta · Comprovantes/${(l.venc || l.comp || "").slice(0, 7).replace("-", "/")}</span></div>` : `<div class="mut" style="font-size:11.5px">Entre com a Microsoft para anexar.</div>`}</div>` });
     if (!novo && l.hist && l.hist.length) fields.push({ type: "html", k: "_h", html: `<details class="fin-hist"><summary>Histórico (${l.hist.length})</summary>${l.hist.slice().reverse().map((h) => `<div><span class="mut">${new Date(h.em).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}</span> · ${esc(h.o)}</div>`).join("")}</details>` });
     const m = ERP.form({
       title: novo ? "Novo Lançamento" : "Editar Lançamento" + (l.parcela ? ` (${l.parcela.n}/${l.parcela.t})` : ""), wide: true, fields, intro: !novo && l.estimado && !l.pago ? `Lançamento de uma recorrência <b>${freqLabel(serie ? serie.passo : 1)}</b>, com valor <b>estimado</b> — confirme o valor real da fatura ao salvar.` : (serie ? `Faz parte de uma recorrência <b>${freqLabel(serie.passo)}</b> (favorecido, categoria, forma e frequência vêm do cadastro).` : ""),
@@ -2262,10 +2427,11 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
           const file = e.target.files[0]; if (!file) return; if (file.size > 25 * 1024 * 1024) { ERP.toast("Arquivo acima de 25 MB."); return; }
           const ym = (l.venc || l.comp || todayISO()).slice(0, 7).split("-"); const safe = file.name.replace(/[^\w.\-]+/g, "_");
           ERP.toast("Enviando anexo…");
-          try { const it = await ERP.Cloud.uploadFile(`Comprovantes/${ym[0]}/${ym[1]}/${l.id}_${safe}`, file); Store.change("financas", (dd) => { const x = dd.lanc.find((y) => y.id === l.id); if (x) x.anexos = (x.anexos || []).concat({ id: it.id, name: it.name, url: it.webUrl, em: todayISO() }); }); ERP.toast("Anexo guardado no OneDrive."); md.close(); lancForm(D().lanc.find((y) => y.id === l.id)); }
+          try { const it = await ERP.Cloud.uploadFile(`Comprovantes/${ym[0]}/${ym[1]}/${l.id}_${Date.now().toString(36)}_${safe}`, file); Store.change("financas", (dd) => { const x = dd.lanc.find((y) => y.id === l.id); if (x) x.anexos = (x.anexos || []).concat({ id: it.id, name: it.name, path: it.path, em: todayISO() }); }); ERP.toast("Anexo guardado na nuvem."); md.close(); lancForm(D().lanc.find((y) => y.id === l.id)); }
           catch (err) { console.error(err); ERP.toast("Não foi possível anexar: " + (err.message || err)); }
         };
-        md.el.querySelectorAll("[data-anx-del]").forEach((b) => (b.onclick = async () => { if (!(await ERP.confirm("Remover este anexo do lançamento? O arquivo também é apagado do OneDrive.", "Remover"))) return; const id = b.dataset.anxDel; if (ERP.Cloud && ERP.Cloud.deleteItem) ERP.Cloud.deleteItem(id); Store.change("financas", (dd) => { const x = dd.lanc.find((y) => y.id === l.id); if (x) x.anexos = (x.anexos || []).filter((a) => a.id !== id); }); md.close(); lancForm(D().lanc.find((y) => y.id === l.id)); }));
+        md.el.querySelectorAll("[data-anx-open]").forEach((a) => (a.onclick = async (ev) => { ev.preventDefault(); try { const url = await ERP.Cloud.fileUrl(a.dataset.anxOpen); window.open(url, "_blank", "noopener"); } catch (err) { ERP.toast("Não foi possível abrir o anexo: " + (err.message || err)); } }));
+        md.el.querySelectorAll("[data-anx-del]").forEach((b) => (b.onclick = async () => { if (!(await ERP.confirm("Remover este anexo do lançamento? O arquivo também é apagado da nuvem.", "Remover"))) return; const id = b.dataset.anxDel; const ax = (l.anexos || []).find((a) => a.id === id); if (ax && ax.path && ERP.Cloud && ERP.Cloud.deleteItem) ERP.Cloud.deleteItem(ax.path); Store.change("financas", (dd) => { const x = dd.lanc.find((y) => y.id === l.id); if (x) x.anexos = (x.anexos || []).filter((a) => a.id !== id); }); md.close(); lancForm(D().lanc.find((y) => y.id === l.id)); }));
         sync();
       },
       onSubmit(v, md) {
@@ -3506,7 +3672,7 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
   const KN = Object.fromEntries(KIND);
   const asset = (id) => D().assets.find((a) => a.id === id) || { ticker: "?", name: "" };
 
-  /* ---------- Ponte IBKR: lê ibkr.json gravado no OneDrive por um robô ----------
+  /* ---------- Ponte IBKR: lê o registro "ibkr" da tabela docs (gravado por um robô ou importado) ----------
      Formato esperado:
      { "asof":"2026-11-02T13:00:00Z", "fx":{"USDBRL":5.42}, "cashUSD":1500.0, "nav":12345.67,
        "positions":[{"ticker":"VOO","name":"Vanguard S&P 500 ETF","cls":"acoes","currency":"USD","qty":10,"price":480.12}] } */
@@ -3835,11 +4001,12 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
 
 </script>
 <script>/* js/mod-sistema.js */
-/* Sistema — dados e sincronização (OneDrive), backup, importação de dados iniciais, sobre */
+/* Sistema — conta e dados (Supabase), backup e restauração, dados de exemplo, aparência, glossário */
 (function () {
   "use strict";
   const { $, $$, esc, todayISO, Store, Cloud } = ERP;
 
+  /* restaura um backup (.json gerado pelo próprio Hub). "merge" junta pelo id; "replace" troca os módulos presentes no arquivo. */
   function importFile(file, mode) {
     const r = new FileReader();
     r.onload = async () => {
@@ -3847,8 +4014,9 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
       const docs = j.docs || (j.doc && j.data ? { [j.doc]: j.data } : null);
       if (!docs) { ERP.toast("Este arquivo não é um backup do Hub."); return; }
       const names = Object.keys(docs).filter((n) => ERP.defaults[n]);
-      const label = names.join(", ");
-      if (!(await ERP.confirm(`${mode === "merge" ? "Juntar" : "Substituir"} os dados de: ${label}? ${mode === "merge" ? "Itens com o mesmo ID são atualizados; os demais são mantidos." : "Os dados atuais desses módulos serão trocados."}`, "Importar"))) return;
+      if (!names.length) { ERP.toast("O arquivo não tem módulos conhecidos."); return; }
+      const label = names.map((n) => ({ financas: "Finanças", reminders: "Reminders", investimentos: "Investimentos", patrimonio: "Patrimônio" }[n] || n)).join(", ");
+      if (!(await ERP.confirm(`${mode === "merge" ? "Juntar" : "Substituir"} os dados de: ${label}? ${mode === "merge" ? "Itens com o mesmo ID são atualizados; os demais são mantidos." : "Os dados atuais desses módulos serão trocados pelos do arquivo."}`, "Restaurar"))) return;
       names.forEach((n) => Store.change(n, (cur) => {
         const inc = docs[n];
         Object.keys(inc).forEach((k) => {
@@ -3857,73 +4025,55 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
           else cur[k] = inc[k];
         });
       }));
-      ERP.toast("Importado: " + label); ERP.render();
+      ERP.toast("Restaurado: " + label); ERP.render();
     };
     r.readAsText(file);
   }
 
   function pDados(root) {
-    const cfg = Cloud.cfg();
-    const st = Store.names().map((n) => { const m = Store.meta[n]; return `<tr><td>${esc(n)}.json</td><td>${m.updatedAt ? new Date(m.updatedAt).toLocaleString("pt-BR") : "—"}</td><td>${m.dirty ? '<span class="pill warn">pendente</span>' : m.etag ? '<span class="pill ok">no OneDrive</span>' : '<span class="pill">só local</span>'}</td></tr>`; }).join("");
+    const logado = !!Cloud.account;
+    const u = Cloud.ultimoSalvamento ? Cloud.ultimoSalvamento() : null;
+    const sujos = ERP.syncSujos ? ERP.syncSujos() : [], pend = ERP.syncPendentes ? ERP.syncPendentes() : [];
+    const NM = { financas: "Finanças", reminders: "Reminders", investimentos: "Investimentos", patrimonio: "Patrimônio" };
+    const lista = (a) => a.map((n) => NM[n] || n).join(", ");
+    const estado = pend.length ? `<span class="pill warn">aguardando sua escolha</span>` : Cloud.status === "err" ? `<span class="pill err">não está salvando</span>` : sujos.length ? `<span class="pill warn">enviando…</span>` : logado ? `<span class="pill ok">em dia</span>` : `<span class="pill">só neste aparelho</span>`;
     root.innerHTML = ERP.pagehead("Dados e Sincronização") + `
-      <div class="card"><h3>OneDrive (fonte oficial dos dados)</h3>
-        <p style="margin-bottom:10px">Os dados ficam num arquivo JSON por módulo na pasta <b>ERP Rafael</b> do OneDrive do administrador (convidados usam essa mesma pasta, compartilhada com eles). Cada aparelho guarda uma cópia de trabalho e sincroniza ao abrir e ao editar. O código no GitHub é público e não contém dados.</p>
-        <p class="mut" style="margin-bottom:10px">O login aceita só contas Microsoft <b>pessoais</b>. Contas corporativas são recusadas pela própria Microsoft, então os dados nunca vão para o OneDrive de uma empresa.</p>
-        <p class="mut" style="margin-bottom:12px">Situação: <b>${esc(Cloud.msg)}</b>${Cloud.account ? " · conta " + esc(Cloud.account.username) + " · " + (Cloud.role === "admin" ? "administrador" : Cloud.role === "guest" ? "convidado" : "") : ""}</p>
-        <div class="fg" style="max-width:640px"><div class="f full"><label for="cid">ID do aplicativo (Microsoft Entra · “Application (client) ID”)</label><input id="cid" value="${esc(cfg.clientId || "")}" placeholder="00000000-0000-0000-0000-000000000000"></div></div>
-        <div class="toolbar" style="margin-top:12px"><button class="btn ghost" id="cSave">Salvar ID</button>${Cloud.account ? `<button class="btn" id="cSync">Sincronizar Agora</button><button class="btn ghost" id="cOut">Sair da Conta</button>` : `<button class="btn orange" id="cIn">Entrar com Microsoft</button>`}</div>
-        <p class="mut" style="font-size:12.5px;margin-top:8px">Endereço de retorno para cadastrar no aplicativo: <code>${esc(Cloud.redirectUri())}</code> (tipo “Aplicativo de página única — SPA”).</p></div>
-      <div class="card"><h3>Arquivos</h3><div class="tw"><table><thead><tr><th>Arquivo</th><th>Última Alteração</th><th>Situação</th></tr></thead><tbody>${st}</tbody></table></div></div>
-      <div class="card"><h3>Backup e Importação</h3>
-        <p class="mut" style="margin-bottom:10px">Use “Juntar” para carregar os dados iniciais (arquivo enviado pelo Claude) sem apagar o que já existe.</p>
-        <div class="toolbar"><button class="btn ghost" id="bExp">Baixar Backup Completo</button><label class="btn ghost" style="cursor:pointer">Importar e juntar<input type="file" accept=".json,application/json" id="iMerge" hidden></label><label class="btn ghost" style="cursor:pointer">Importar e substituir<input type="file" accept=".json,application/json" id="iRep" hidden></label></div></div>
-      <div class="card"><h3>Dados de Exemplo</h3><p class="mut" style="margin-bottom:10px">Para conhecer Finanças Pessoais com números: carrega uma conta, um cartão, recorrências, compras, um empréstimo e uma meta, todos marcados como exemplo. Remover apaga só eles.</p><div class="toolbar">${ERP.temExemplo() ? `<button class="btn ghost" id="exRem">Remover Exemplos</button>` : `<button class="btn ghost" id="exAdd">Carregar Exemplo</button>`}</div></div>
-      <div class="card"><h3>Aparência</h3><p class="mut" style="margin-bottom:12px">O padrão é o modo claro, com fundo branco. Escolha Escuro, ou Automático para seguir o modo do aparelho. O botão de lua/sol no menu alterna na hora.</p><div class="tabs" id="aTheme" style="margin:0">${[["light", "Claro"], ["dark", "Escuro"], ["auto", "Automático"]].map(([k, n]) => `<button data-th="${k}" class="${ERP.theme() === k ? "on" : ""}">${n}</button>`).join("")}</div></div>
-      <div class="card"><h3>Sobre</h3><p>Hub ${esc(ERP.version)} · módulos: ${ERP.modules.map((m) => esc(m.label)).join(", ")}.</p></div>`;
+      <div class="card"><h3>Sua Conta</h3>
+        ${logado ? `<div class="kv"><div><span class="k">Conta</span><span class="v">${esc(Cloud.account.username)}</span></div>${Cloud.firstName() ? `<div><span class="k">Nome</span><span class="v">${esc(Cloud.account.name)}</span></div>` : ""}</div>
+        <p class="mut" style="margin-top:10px">Login pela sua conta Microsoft pessoal. Cada conta vê somente os próprios dados.</p>
+        <div class="toolbar" style="margin-top:12px"><button class="btn ghost" id="cOut">Sair da Conta</button></div>`
+        : `<p class="mut" style="margin-bottom:12px">Você não entrou. O que você lançar fica só neste aparelho até entrar.</p><div class="toolbar"><button class="btn orange" id="cIn">Entrar com Microsoft</button></div>`}
+      </div>
+      <div class="card"><h3>Seus Dados</h3>
+        <div class="kv">
+          <div><span class="k">Situação</span><span class="v">${estado}</span></div>
+          <div><span class="k">Onde ficam</span><span class="v">Na nuvem (banco de dados protegido por login e regras por usuário), com cópia de trabalho neste aparelho</span></div>
+          <div><span class="k">Último salvamento</span><span class="v">${u ? esc(ERP.syncHora(u)) : "ainda não"}</span></div>
+          <div><span class="k">Ainda não enviado</span><span class="v">${sujos.length ? esc(lista(sujos)) : '<span class="sync-ok">nada</span>'}</span></div>
+          <div><span class="k">Decisão pendente</span><span class="v">${pend.length ? esc(lista(pend)) : '<span class="sync-ok">nenhuma</span>'}</span></div>
+        </div>
+        <div class="toolbar" style="margin-top:12px">${pend.length ? '<button class="btn orange" id="sgEsc">Escolher como juntar</button>' : ""}${logado ? '<button class="btn" id="cSync">Sincronizar Agora</button>' : ""}</div>
+        <p class="mut" style="font-size:12.5px;margin-top:10px">Nos outros aparelhos, basta entrar com a mesma conta: os dados aparecem iguais. Se dois aparelhos alterarem o mesmo módulo ao mesmo tempo, o Hub pergunta antes de juntar — nunca descarta nada sozinho.</p>
+      </div>
+      <div class="card"><h3>Backup</h3>
+        <p class="mut" style="margin-bottom:10px">Uma cópia completa dos seus dados em um arquivo <code>.json</code>, para guardar fora da nuvem. Para voltar a um backup, use "Restaurar".</p>
+        <div class="toolbar"><button class="btn ghost" id="bExp">Exportar Backup (.json)</button><label class="btn ghost" style="cursor:pointer">Restaurar e Juntar<input type="file" accept=".json,application/json" id="iMerge" hidden></label><label class="btn ghost" style="cursor:pointer">Restaurar e Substituir<input type="file" accept=".json,application/json" id="iRep" hidden></label></div>
+      </div>
+      <div class="card"><h3>Dados de Exemplo</h3><p class="mut" style="margin-bottom:10px">Para conhecer Finanças com números: carrega uma conta, um cartão, recorrências, compras, um empréstimo e uma meta, todos marcados como exemplo. Remover apaga só eles.</p><div class="toolbar">${ERP.temExemplo() ? `<button class="btn ghost" id="exRem">Remover Exemplos</button>` : `<button class="btn ghost" id="exAdd">Carregar Exemplo</button>`}</div></div>
+      <div class="card"><h3>Aparência</h3><p class="mut" style="margin-bottom:12px">O padrão é o modo claro. Escolha Escuro, ou Automático para seguir o modo do aparelho. O botão de lua/sol no menu alterna na hora.</p><div class="tabs" id="aTheme" style="margin:0">${[["light", "Claro"], ["dark", "Escuro"], ["auto", "Automático"]].map(([k, n]) => `<button data-th="${k}" class="${ERP.theme() === k ? "on" : ""}">${n}</button>`).join("")}</div></div>
+      <div class="card"><h3>Sobre</h3><p>Hub ${esc(ERP.version)} · módulos: ${ERP.modules.map((m) => esc(m.label)).join(", ")}.</p><p class="mut" style="margin-top:6px">Página instalável (PWA). Dados na nuvem via Supabase; login Microsoft. O código no GitHub é público e não contém dados.</p></div>`;
     $("#aTheme", root).onclick = (e) => { const b = e.target.closest("[data-th]"); if (b) ERP.setTheme(b.dataset.th); };
-    $("#cSave", root).onclick = () => { ERP.lsSet("cloud", { clientId: $("#cid", root).value.trim() }); ERP.toast("ID salvo. Recarregando…"); setTimeout(() => location.reload(), 600); };
     const i = $("#cIn", root); if (i) i.onclick = () => Cloud.login();
-    const s = $("#cSync", root); if (s) s.onclick = async () => { await Cloud.pullAll(); for (const n of Store.names()) if (Store.meta[n].dirty) await Cloud.push(n).catch(() => {}); ERP.render(); };
-    const o = $("#cOut", root); if (o) o.onclick = () => Cloud.logout();
+    const o = $("#cOut", root); if (o) o.onclick = async () => { if (await ERP.confirm("Sair da conta neste aparelho? Seus dados continuam na nuvem.", "Sair")) Cloud.logout(); };
+    const s = $("#cSync", root); if (s) s.onclick = async () => { s.disabled = true; s.textContent = "Sincronizando…"; try { await Cloud.sincronizarAgora(); } finally { ERP.render(); } };
+    const e1 = $("#sgEsc", root); if (e1) e1.onclick = () => Cloud.askConflict(ERP.syncPendentes());
     const ea = $("#exAdd", root); if (ea) ea.onclick = () => ERP.finExemplo();
     const er = $("#exRem", root); if (er) er.onclick = () => ERP.confirm("Remover todos os dados de exemplo?", "Remover").then((ok) => ok && ERP.finRemoverExemplo());
-    $("#bExp", root).onclick = () => { const docs = {}; Store.names().forEach((n) => (docs[n] = Store.get(n))); ERP.download(`hub-backup-${todayISO()}.json`, JSON.stringify({ app: "erp-rafael", version: ERP.version, savedAt: new Date().toISOString(), docs }, null, 2)); };
+    $("#bExp", root).onclick = () => { Cloud.exportarBackup(); ERP.toast("Backup baixado."); };
     $("#iMerge", root).onchange = (e) => e.target.files[0] && importFile(e.target.files[0], "merge");
     $("#iRep", root).onchange = (e) => e.target.files[0] && importFile(e.target.files[0], "replace");
   }
-  /* ---------- permissões: só o administrador libera ou remove e-mails ---------- */
-  function pPermissoes(root) {
-    const head = ERP.pagehead("Permissões");
-    if (!Cloud.account) { root.innerHTML = head + `<div class="card"><p class="mut">Disponível depois de entrar com a conta Microsoft do administrador.</p></div>`; return; }
-    if (Cloud.role !== "admin") { root.innerHTML = head + `<div class="card"><p class="mut">Somente o administrador pode liberar ou remover acessos.</p></div>`; return; }
-    root.innerHTML = head + `<div class="card"><p class="mut">Carregando…</p></div>`;
-    let a, link = "";
-    const fmtD = (iso) => (iso ? new Date(iso).toLocaleDateString("pt-BR") : "—");
-    function draw(msg, err) {
-      root.innerHTML = head + `
-        <div class="card"><h3>Administrador</h3><p>${esc(Cloud.email())}</p><p class="mut" style="margin-top:6px">Acesso total. Somente esta conta abre esta página e libera outras pessoas.</p></div>
-        <div class="card"><h3>Liberar Acesso a um e-mail</h3>
-          <p class="mut" style="margin-bottom:10px">A pessoa entra com a conta Microsoft desse e-mail e passa a ver e editar <b>os mesmos dados</b> do ERP. A liberação compartilha a pasta <b>ERP Rafael</b> do seu OneDrive com ela.</p>
-          <div class="toolbar" style="max-width:640px"><input id="pEm" type="email" placeholder="email@exemplo.com" autocomplete="off" style="flex:1 1 260px"><button class="btn orange" id="pAdd">Liberar Acesso</button></div>
-          ${msg ? `<div class="note ${err ? "err" : ""}" style="margin-top:10px">${esc(msg)}</div>` : ""}</div>
-        <div class="card"><h3>Quem Pode Acessar</h3>
-          ${a.users.length ? `<div class="tw"><table><thead><tr><th>E-mail</th><th>Liberado em</th><th></th></tr></thead><tbody>${a.users.map((u) => `<tr><td>${esc(u.email)}</td><td>${fmtD(u.addedAt)}</td><td style="text-align:right"><button class="btn ghost" data-rm="${esc(u.email)}">Remover</button></td></tr>`).join("")}</tbody></table></div>` : `<p class="mut">Ninguém além de você.</p>`}</div>
-        <div class="card"><h3>Link de Acesso</h3>
-          <p class="mut" style="margin-bottom:10px">Envie este link para a pessoa liberada e peça que o abra no navegador dela e entre com a conta Microsoft do e-mail liberado. O link sozinho não dá acesso: só funciona para e-mails que estejam na lista acima.</p>
-          <div class="toolbar" style="max-width:760px"><input id="pLk" readonly value="${esc(link)}" style="flex:1 1 320px"><button class="btn ghost" id="pCp">Copiar Link</button></div></div>`;
-      $("#pAdd", root).onclick = async (ev) => {
-        const b = ev.currentTarget; const v = $("#pEm", root).value; b.disabled = true;
-        try { a = await Cloud.liberar(v); draw("Acesso liberado para " + v.trim().toLowerCase() + ". Envie o link de acesso abaixo."); } catch (e) { b.disabled = false; draw(e.message, true); $("#pEm", root).value = v; }
-      };
-      $("#pEm", root).onkeydown = (e) => { if (e.key === "Enter") $("#pAdd", root).click(); };
-      $$("[data-rm]", root).forEach((b) => (b.onclick = async () => {
-        const em = b.dataset.rm; if (!(await ERP.confirm(`Remover o acesso de ${em}? A pasta deixa de ser compartilhada com essa conta.`, "Remover"))) return;
-        try { a = await Cloud.revogar(em); draw("Acesso removido: " + em); } catch (e) { draw(e.message, true); }
-      }));
-      $("#pCp", root).onclick = async () => { try { await navigator.clipboard.writeText(link); ERP.toast("Link copiado."); } catch (e) { $("#pLk", root).select(); ERP.toast("Selecione e copie o link."); } };
-    }
-    (async () => { try { a = await Cloud.acessoLoad(); link = await Cloud.inviteLink(); draw(); } catch (e) { root.innerHTML = head + `<div class="note err">Não foi possível carregar as permissões: ${esc(e.message)}</div>`; } })();
-  }
+
   /* glossário: todos os termos técnicos usados nas telas, em linguagem simples */
   function pGlossario(root) {
     const q = (root._q || "").toLowerCase();
@@ -3933,321 +4083,7 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
       <div class="gloss">${itens.filter((i) => !q || (i.t + " " + i.d).toLowerCase().includes(q)).map((i) => `<div class="card" id="gl-${i.k}"><b>${esc(i.t)}</b><p>${esc(i.d)}</p></div>`).join("") || `<p class="mut">Nenhum termo encontrado.</p>`}</div>`;
     $("#glQ", root).oninput = (e) => { root._q = e.target.value; const v = e.target.value; pGlossario(root); const i = $("#glQ", root); i.focus(); i.setSelectionRange(v.length, v.length); };
   }
-  ERP.register({ id: "sistema", label: "Sistema", icon: "settings", group: "Sistema", pages: [{ id: "dados", label: "Dados e Sincronização", icon: "cloud", render: pDados }, { id: "permissoes", label: "Permissões", icon: "lock", render: pPermissoes }, { id: "glossario", label: "Glossário", icon: "info", render: pGlossario }] });
-})();
-
-</script>
-<script>/* js/backend-supabase.js */
-/* js/backend-supabase.js — v0.12.0
-   Backend no Supabase (Postgres) em vez de arquivos no OneDrive.
-   - Login: "Entrar com a Microsoft" via provedor Azure do Supabase (OAuth/PKCE).
-   - Dados: tabela public.docs (um registro por módulo, por usuário), protegida por RLS.
-   - Mantém a segurança da v0.11.0: nunca troca dados em silêncio (Juntar/nuvem/aparelho),
-     aparelho novo só baixa, conferência antes de gravar, "alteração sem mudança não conta",
-     concorrência otimista por "rev" (no lugar do eTag), avisos visíveis e backup por exportação.
-   Carregado antes de ERP.boot(); substitui as funções de nuvem/login do core (OneDrive/MSAL).
-   Extras que dependiam do Graph (anexos, ponte IBKR, compartilhamento) ficam em espera, sem quebrar. */
-(function () {
-  "use strict";
-  const { $, $$, esc, Store, Cloud } = ERP;
-  const lsGet = ERP.lsGet, lsSet = ERP.lsSet;
-  ERP.version = "v0.12.0";
-
-  const SB_URL = "https://jglagrayubmcupmnobfe.supabase.co";
-  const SB_KEY = "sb_publishable_8bWnCJoiMhPdV-jW2XDvPQ_s0UvTOcN";
-  if (!window.supabase || !window.supabase.createClient) { console.error("supabase-js não carregou"); return; }
-  const sb = (ERP.sb = window.supabase.createClient(SB_URL, SB_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "pkce", storageKey: "erp.rafael.sb" },
-  }));
-  const PREFIX = "erp.rafael.";
-
-  /* ---------- utilidades ---------- */
-  const clone = (o) => JSON.parse(JSON.stringify(o));
-  const hora = (iso) => { try { const d = new Date(iso); const h = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }); return d.toDateString() === new Date().toDateString() ? h : d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) + " " + h; } catch (e) { return ""; } };
-  const NOMES = { financas: "Finanças", reminders: "Reminders", investimentos: "Investimentos", patrimonio: "Patrimônio" };
-  const nome = (n) => NOMES[n] || n;
-
-  function semAuto(v) {
-    if (Array.isArray(v)) return v.filter((x) => !(x && typeof x === "object" && x.auto === true)).map(semAuto);
-    if (v && typeof v === "object") { const o = {}; Object.keys(v).sort().forEach((k) => { if (k !== "seq" && k !== "updatedAt" && k !== "dataIni") o[k] = semAuto(v[k]); }); return o; }
-    return v;
-  }
-  const igual = (a, b) => JSON.stringify(semAuto(a)) === JSON.stringify(semAuto(b));
-  function itensProprios(data, def, porChave) {
-    let t = 0; if (!data || typeof data !== "object") return 0;
-    Object.keys(data).forEach((k) => {
-      const v = data[k], dv = def && typeof def === "object" ? def[k] : undefined;
-      if (Array.isArray(v)) {
-        const ids = new Set((Array.isArray(dv) ? dv : []).map((x) => x && x.id));
-        const crus = new Set((Array.isArray(dv) ? dv : []).map((x) => JSON.stringify(x)));
-        const c = v.filter((x) => !(x && typeof x === "object" && x.auto === true)).filter((x) => (x && typeof x === "object" && "id" in x) ? !ids.has(x.id) : !crus.has(JSON.stringify(x))).length;
-        if (c) { t += c; if (porChave) porChave[k] = (porChave[k] || 0) + c; }
-      } else if (v && typeof v === "object") {
-        if (dv && typeof dv === "object" && !Array.isArray(dv) && !Object.keys(dv).length) { const c = Object.keys(v).length; if (c) { t += c; if (porChave) porChave[k] = (porChave[k] || 0) + c; } }
-        else t += itensProprios(v, dv, porChave);
-      }
-    });
-    return t;
-  }
-  const temDados = (n, data) => itensProprios(data === undefined ? Store.docs[n] : data, ERP.defaults[n]) > 0;
-  function resumo(data, n) {
-    const por = {}; itensProprios(data || {}, ERP.defaults[n], por);
-    const ROT = { lanc: "lançamentos", contas: "contas", cartoes: "cartões", tasks: "tarefas", lists: "listas", assets: "ativos", moves: "movimentações", items: "bens", dividas: "dívidas", metas: "metas", favorecidos: "favorecidos", series: "recorrências", categorias: "categorias", snapshots: "fotos do mês" };
-    return Object.keys(por).sort((a, b) => por[b] - por[a]).slice(0, 4).map((k) => { const r = ROT[k] || k; return por[k] + " " + (por[k] === 1 ? r.replace(/ões$/, "ão").replace(/s$/, "") : r); }).join(" · ") || "sem itens próprios";
-  }
-  function juntarItem(a, b, bMaisNovo) {
-    const o = {}; const keys = new Set(Object.keys(a).concat(Object.keys(b)));
-    keys.forEach((k) => {
-      if (!(k in a)) o[k] = clone(b[k]); else if (!(k in b)) o[k] = clone(a[k]);
-      else if (Array.isArray(a[k]) && Array.isArray(b[k])) o[k] = juntar(a[k], b[k]);
-      else if (a[k] && b[k] && typeof a[k] === "object" && typeof b[k] === "object" && !Array.isArray(a[k]) && !Array.isArray(b[k])) o[k] = juntarItem(a[k], b[k], bMaisNovo);
-      else o[k] = clone(bMaisNovo ? b[k] : a[k]);
-    });
-    return o;
-  }
-  function juntar(nuvem, local) {
-    if (Array.isArray(nuvem) && Array.isArray(local)) {
-      const comId = (a) => a.every((x) => x && typeof x === "object" && x.id != null);
-      if (comId(nuvem) && comId(local)) {
-        const by = new Map(nuvem.map((x) => [String(x.id), clone(x)]));
-        local.forEach((x) => { const k = String(x.id), a = by.get(k); if (!a) by.set(k, clone(x)); else by.set(k, juntarItem(a, clone(x), (x.updatedAt || 0) >= (a.updatedAt || 0))); });
-        return Array.from(by.values());
-      }
-      const vistos = new Set(nuvem.map((x) => JSON.stringify(x))); const out = clone(nuvem);
-      local.forEach((x) => { const j = JSON.stringify(x); if (!vistos.has(j)) { vistos.add(j); out.push(clone(x)); } });
-      return out;
-    }
-    if (nuvem && local && typeof nuvem === "object" && typeof local === "object" && !Array.isArray(nuvem) && !Array.isArray(local)) {
-      const o = clone(nuvem);
-      Object.keys(local).forEach((k) => { if (!(k in o)) o[k] = clone(local[k]); else if (typeof o[k] === "number" && typeof local[k] === "number" && /seq|num|count/i.test(k)) o[k] = Math.max(o[k], local[k]); else o[k] = juntar(o[k], local[k]); });
-      return o;
-    }
-    return local === undefined ? clone(nuvem) : clone(local);
-  }
-  ERP.syncJuntar = juntar; ERP.syncTemDados = temDados;
-
-  /* ---------- alteração sem mudança não conta ---------- */
-  const changeOrig = Store.change.bind(Store);
-  const SEM_MUDANCA = { semMudanca: true };
-  Store.change = function (n, fn) {
-    let antes = null; try { antes = JSON.stringify(this.docs[n]); } catch (e) {}
-    try { changeOrig(n, (d) => { fn(d); if (antes !== null && JSON.stringify(d) === antes) throw SEM_MUDANCA; }); return true; }
-    catch (e) { if (e === SEM_MUDANCA) { this.listeners.forEach((f) => f(n)); return false; } throw e; }
-  };
-
-  /* ---------- estado e avisos ---------- */
-  const pendentes = () => Store.names().filter((n) => Store.meta[n] && Store.meta[n].remote);
-  const sujos = () => Store.names().filter((n) => Store.meta[n] && Store.meta[n].dirty);
-  const marcarSalvo = () => lsSet("sync.ultimo", new Date().toISOString());
-  function baixarBackup(sufixo) {
-    const docs = {}; Store.names().forEach((n) => (docs[n] = Store.get(n)));
-    ERP.download(`hub-backup-${sufixo || new Date().toISOString().slice(0, 10)}.json`, JSON.stringify({ app: "erp-rafael", version: ERP.version, savedAt: new Date().toISOString(), conta: Cloud.email(), docs }, null, 2));
-  }
-  Cloud.exportarBackup = () => baixarBackup();
-
-  function faixa() {
-    let el = $("#syncBar");
-    if (!el) { el = document.createElement("div"); el.id = "syncBar"; el.setAttribute("role", "status"); const tb = $("#topbar"); if (tb && tb.parentNode) tb.parentNode.insertBefore(el, tb.nextSibling); else document.body.prepend(el); }
-    let cls = "", html = "";
-    if (Cloud.account && pendentes().length) { cls = "warn"; html = `<span>Há dados diferentes neste aparelho e no banco (${esc(pendentes().map(nome).join(", "))}). Nada é gravado até você escolher.</span><button type="button" data-sb="escolher">Escolher</button>`; }
-    else if (Cloud.account && !navigator.onLine) { cls = "warn"; html = `<span>Sem internet. O que você lançar fica neste aparelho e sobe quando a conexão voltar.</span>`; }
-    else if (Cloud.account && Cloud.status === "err") { cls = "err"; html = `<span>Não está salvando na nuvem. O que você lançar está só neste aparelho.</span><button type="button" data-sb="tentar">Tentar de novo</button>`; }
-    el.className = cls; el.hidden = !html; el.innerHTML = html;
-    const b1 = $("[data-sb=escolher]", el); if (b1) b1.onclick = () => Cloud.askConflict(pendentes());
-    const b2 = $("[data-sb=tentar]", el); if (b2) b2.onclick = () => Cloud.sincronizarAgora();
-  }
-  const css = document.createElement("style");
-  css.textContent = `#syncBar{position:sticky;top:56px;z-index:49;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;padding:9px 16px;font:600 13.5px/1.35 inherit;color:#fff;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-#syncBar[hidden]{display:none}#syncBar.err{background:#C62828}#syncBar.warn{background:#B45309}
-#syncBar button{font:inherit;padding:5px 12px;border-radius:2px;border:1px solid rgba(255,255,255,.75);background:transparent;color:#fff;cursor:pointer}
-.sync-ok{color:var(--pos)}.sync-sel{display:grid;gap:10px;margin:14px 0}.sync-sel label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:2px;padding:10px 12px;cursor:pointer}
-.sync-sel label:has(input:checked){border-color:var(--orange,#D6421F);box-shadow:inset 3px 0 0 var(--orange,#D6421F)}.sync-sel small{display:block;color:var(--ink-2);font-weight:400;margin-top:2px}
-.sync-tab{width:100%;border-collapse:collapse;margin:8px 0 2px;font-size:13px}.sync-tab td,.sync-tab th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left}`;
-  document.head.appendChild(css);
-
-  const setStatusOrig = Cloud.setStatus.bind(Cloud);
-  Cloud.setStatus = function (s, m) {
-    if (s === "ok" && pendentes().length) { s = "busy"; m = "Aguardando sua escolha"; }
-    else if (s === "ok") { const u = lsGet("sync.ultimo", null); m = "Salvo na nuvem" + (u ? " · " + hora(u) : ""); }
-    else if (s === "busy" && !m) m = "Alterações pendentes…";
-    setStatusOrig(s, m); try { faixa(); } catch (e) {}
-  };
-
-  /* ---------- armazenamento (tabela docs) ---------- */
-  async function readRow(n) {
-    const { data, error } = await sb.from("docs").select("data,rev").eq("name", n).maybeSingle();
-    if (error) throw new Error("ler " + (error.code || error.message || ""));
-    return data; /* {data, rev} | null */
-  }
-  function aceitar(n, row) { const meta = Store.meta[n]; Store.replace(n, row.data, new Date().toISOString()); meta.rev = row.rev; meta.dirty = false; delete meta.remote; Store.saveMeta(n); }
-
-  Cloud.pull = async function (n) {
-    const meta = Store.meta[n];
-    const row = await readRow(n);
-    if (!row) { if (meta.rev != null) { meta.rev = null; Store.saveMeta(n); } if (temDados(n)) await this.push(n, true, true); return false; }
-    if (meta.remote) return true;
-    if (meta.rev === row.rev) { if (meta.dirty) await this.push(n); return false; }
-    if (meta.rev == null) {
-      if (!temDados(n) || igual(row.data, Store.docs[n])) { aceitar(n, row); return false; }
-      if (!temDados(n, row.data)) { meta.rev = row.rev; Store.saveMeta(n); await this.push(n); return false; }
-      meta.remote = { data: row.data, rev: row.rev, primeira: true }; Store.saveMeta(n); return true;
-    }
-    if (!meta.dirty) { aceitar(n, row); return false; }
-    if (igual(row.data, Store.docs[n])) { meta.rev = row.rev; meta.dirty = false; Store.saveMeta(n); return false; }
-    meta.remote = { data: row.data, rev: row.rev }; Store.saveMeta(n); return true;
-  };
-
-  Cloud.schedule = function (n) {
-    if (!this.account) return;
-    const meta = Store.meta[n]; if (meta && meta.remote) { faixa(); return; }
-    clearTimeout(this.timers[n]); this.setStatus("busy", "Alterações pendentes…");
-    this.timers[n] = setTimeout(() => { delete this.timers[n]; this.push(n).catch(() => {}); }, 2000);
-  };
-
-  Cloud.push = async function (n, force, criar) {
-    if (!this.account) return;
-    const meta = Store.meta[n];
-    if (meta.remote) { faixa(); return; }
-    if (meta.rev == null && !criar) { const c = await this.pull(n); if (c) this.askConflict([n]); return; }
-    try {
-      this.setStatus("busy", "Salvando…");
-      const payload = Store.docs[n];
-      if (meta.rev == null) {
-        const { data, error } = await sb.from("docs").insert({ name: n, data: payload, rev: 1 }).select("rev").maybeSingle();
-        if (error) { if (String(error.code) === "23505") { const c = await this.pull(n); if (c) this.askConflict([n]); return; } throw new Error("inserir " + error.code); }
-        meta.rev = (data && data.rev) || 1;
-      } else {
-        const { data, error } = await sb.from("docs").update({ data: payload, rev: meta.rev + 1 }).eq("name", n).eq("rev", meta.rev).select("rev");
-        if (error) throw new Error("salvar " + error.code);
-        if (!data || !data.length) { const c = await this.pull(n); if (c) this.askConflict([n]); else this.setStatus("ok"); return; }
-        meta.rev = data[0].rev;
-      }
-      meta.dirty = false; Store.saveMeta(n); marcarSalvo();
-      this.setStatus(sujos().length ? "busy" : "ok");
-    } catch (e) { console.error(e); this.setStatus("err", "Não salvou (dados seguros neste aparelho)"); throw e; }
-  };
-
-  Cloud.pullAll = async function () {
-    if (this._puxando) return this._puxando;
-    this._puxando = (async () => {
-      const conflicts = []; this.setStatus("busy", "Sincronizando…");
-      for (const n of Store.names()) {
-        try { if (await this.pull(n)) conflicts.push(n); }
-        catch (e) { console.error(n, e); this.setStatus("err", "Falha ao ler " + nome(n)); ERP.render(); return; }
-      }
-      if (!sujos().length) marcarSalvo();
-      this.setStatus("ok"); ERP.render();
-      if (conflicts.length) this.askConflict(conflicts);
-    })();
-    try { return await this._puxando; } finally { this._puxando = null; this._ultimaLeitura = Date.now(); }
-  };
-
-  Cloud.sincronizarAgora = async function () {
-    await this.pullAll();
-    for (const n of Store.names()) if (Store.meta[n].dirty && !Store.meta[n].remote) await this.push(n).catch(() => {});
-    ERP.render();
-  };
-
-  /* ---------- a pergunta (nunca troca em silêncio) ---------- */
-  Cloud.askConflict = function (list) {
-    list = (list || []).filter((n) => Store.meta[n] && Store.meta[n].remote);
-    if (!list.length || this._perguntando) { faixa(); return; }
-    this._perguntando = true; faixa();
-    const primeira = list.some((n) => Store.meta[n].remote.primeira);
-    const linhas = list.map((n) => `<tr><td><b>${esc(nome(n))}</b></td><td>${esc(resumo(Store.docs[n], n))}</td><td>${esc(resumo(Store.meta[n].remote.data, n))}</td></tr>`).join("");
-    const m = ERP.modal(`<h2>${primeira ? "Este aparelho tem dados que não estão na nuvem" : "Alterações em dois lugares"}</h2>
-      <p>${primeira ? "Este aparelho já tinha dados antes de entrar, e a nuvem também tem dados." : "Estes módulos foram alterados neste aparelho e também na nuvem, por outro aparelho."} Nada foi trocado. Escolha o que fazer:</p>
-      <table class="sync-tab"><thead><tr><th>Módulo</th><th>Neste aparelho</th><th>Na nuvem</th></tr></thead><tbody>${linhas}</tbody></table>
-      <div class="sync-sel">
-        <label><input type="radio" name="sOp" value="juntar" checked><span><b>Juntar os dois (recomendado)</b><small>Mantém tudo dos dois lados.</small></span></label>
-        <label><input type="radio" name="sOp" value="nuvem"><span><b>Usar só o da nuvem</b><small>Os dados deste aparelho são trocados pelos da nuvem.</small></span></label>
-        <label><input type="radio" name="sOp" value="local"><span><b>Usar só o deste aparelho</b><small>Os dados da nuvem são trocados pelos deste aparelho.</small></span></label>
-      </div>
-      <p class="mut" style="font-size:12.5px">Antes de aplicar, o Hub baixa uma cópia (.json) do que for substituído.</p>
-      <div class="act"><button class="btn ghost" data-depois>Decidir depois</button><span class="sp"></span><button class="btn orange" data-ok>Aplicar</button></div>`, { noFocus: true });
-    const fechar = () => { this._perguntando = false; m.close(); faixa(); };
-    $("[data-depois]", m.el).onclick = fechar;
-    const obs = new MutationObserver(() => { if (!document.body.contains(m.el)) { this._perguntando = false; obs.disconnect(); faixa(); } });
-    obs.observe(document.body, { childList: true });
-    $("[data-ok]", m.el).onclick = async (ev) => {
-      const op = ($("input[name=sOp]:checked", m.el) || {}).value || "juntar";
-      ev.target.disabled = true; ev.target.textContent = "Aplicando…";
-      try {
-        for (const n of list) {
-          const meta = Store.meta[n], rem = meta.remote; if (!rem) continue;
-          if (op === "nuvem") { baixarBackup(n + "-aparelho"); aceitar(n, rem); }
-          else if (op === "local") { baixarBackup(n + "-nuvem"); delete meta.remote; meta.rev = rem.rev; meta.dirty = true; Store.saveMeta(n); await this.push(n); }
-          else { baixarBackup(n + "-aparelho"); baixarBackup(n + "-nuvem"); const junto = juntar(rem.data, Store.docs[n]); delete meta.remote; meta.rev = rem.rev; Store.saveMeta(n); Store.replace(n, junto, new Date().toISOString()); meta.dirty = true; Store.saveMeta(n); await this.push(n); }
-        }
-        fechar(); this.setStatus(sujos().length ? "busy" : "ok"); ERP.render(); ERP.toast(op === "juntar" ? "Dados juntados e salvos na nuvem." : "Pronto. Cópia de segurança baixada.");
-      } catch (e) { console.error(e); ev.target.disabled = false; ev.target.textContent = "Aplicar"; ERP.toast("Não foi possível aplicar: " + e.message); }
-    };
-  };
-
-  /* ---------- login (Microsoft via Supabase) ---------- */
-  function setAccount(user) { Cloud.account = user ? { username: (user.email || "").toLowerCase(), name: (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || (user.email || "") } : null; }
-  Cloud.init = async function () {
-    try {
-      const { data } = await sb.auth.getSession();
-      const session = data && data.session;
-      sb.auth.onAuthStateChange((evt) => { if (evt === "SIGNED_OUT") setAccount(null); });
-      if (!session) { setAccount(null); this.role = "nolink"; this.setStatus("local", "Entrar para sincronizar"); ERP.gate("login"); return; }
-      setAccount(session.user);
-      const em = this.email(), u = lsGet("user", null);
-      if (u && u !== em) { if (Store.names().some((n) => temDados(n))) try { baixarBackup("conta-anterior"); } catch (e) {} Store.names().forEach((n) => { try { localStorage.removeItem(PREFIX + "doc." + n); localStorage.removeItem(PREFIX + "meta." + n); } catch (e) {} }); Store.load(); }
-      lsSet("user", em); this.role = "admin";
-      ERP.gate(null); this.setStatus("busy", "Sincronizando…");
-      await this.pullAll();
-    } catch (e) { console.error(e); this.setStatus("err", "Erro de login"); ERP.gate("erro", e.message || String(e)); }
-  };
-  Cloud.login = async function () { try { await sb.auth.signInWithOAuth({ provider: "azure", options: { scopes: "openid email profile", redirectTo: this.redirectUri() } }); } catch (e) { ERP.toast("Não foi possível iniciar o login: " + e.message); } };
-  Cloud.logout = async function () { try { await sb.auth.signOut(); } catch (e) {} try { lsSet("user", null); } catch (e) {} location.reload(); };
-  Cloud.token = async function () { const { data } = await sb.auth.getSession(); return data && data.session ? data.session.access_token : null; };
-
-  /* ---------- extras que dependiam do Graph: em espera, sem quebrar ---------- */
-  const emEspera = (msg) => { throw new Error(msg || "Recurso em migração para o novo backend."); };
-  Cloud.uploadFile = async () => emEspera("Anexar comprovantes volta em breve no novo backend (Supabase).");
-  Cloud.deleteItem = async () => false;
-  Cloud.readFile = async () => null;                 /* ponte IBKR: lê depois */
-  Cloud.folder = async () => emEspera("Compartilhamento não se aplica ao novo backend.");
-  Cloud.acessoLoad = async () => ({ app: "erp-rafael", doc: "acesso", users: [] });
-  Cloud.liberar = async () => emEspera("No novo backend, cada pessoa usa a própria conta; o compartilhamento de pasta saiu.");
-  Cloud.revogar = async () => emEspera("No novo backend, o compartilhamento de pasta saiu.");
-  Cloud.inviteLink = async () => emEspera("No novo backend, o compartilhamento de pasta saiu.");
-
-  /* ---------- celular: envia ao sair, confere ao voltar ---------- */
-  document.addEventListener("visibilitychange", () => {
-    if (!Cloud.account) return;
-    if (document.visibilityState === "hidden") { Object.keys(Cloud.timers || {}).forEach((n) => { clearTimeout(Cloud.timers[n]); delete Cloud.timers[n]; }); sujos().forEach((n) => { if (!Store.meta[n].remote) Cloud.push(n).catch(() => {}); }); }
-    else if (!Cloud._ultimaLeitura || Date.now() - Cloud._ultimaLeitura > 30000) { Cloud.pullAll().catch(() => {}); }
-  });
-  window.addEventListener("offline", () => faixa());
-  window.addEventListener("online", () => { faixa(); if (Cloud.account) Cloud.sincronizarAgora().catch(() => {}); });
-  window.addEventListener("beforeunload", (e) => { if (Cloud.account && (sujos().length || Object.keys(Cloud.timers || {}).length)) { e.preventDefault(); e.returnValue = ""; } });
-
-  /* ---------- Sistema › Dados: cartão de segurança ---------- */
-  ERP.onBoot = (ERP.onBoot || []).concat(() => {
-    const mod = ERP.modules.find((m) => m.id === "sistema"); const pg = mod && (mod.pages || []).find((p) => p.id === "dados");
-    if (!pg || pg._sb) return; const orig = pg.render; pg._sb = true;
-    pg.render = function (root) {
-      orig(root);
-      const u = lsGet("sync.ultimo", null); const pend = pendentes();
-      const card = document.createElement("div"); card.className = "card";
-      card.innerHTML = `<h3>Seus dados estão seguros?</h3>
-        <table class="sync-tab"><tbody>
-          <tr><td>Conta</td><td>${Cloud.account ? esc(Cloud.account.username) : '<b style="color:var(--neg)">sem login — nada vai para a nuvem</b>'}</td></tr>
-          <tr><td>Onde ficam</td><td>Banco Supabase (nuvem), protegido por login e regras por usuário</td></tr>
-          <tr><td>Último salvamento</td><td>${u ? esc(hora(u)) : "ainda não"}</td></tr>
-          <tr><td>Ainda não enviado</td><td>${sujos().length ? esc(sujos().map(nome).join(", ")) : '<span class="sync-ok">nada</span>'}</td></tr>
-          <tr><td>Decisão pendente</td><td>${pend.length ? esc(pend.map(nome).join(", ")) : '<span class="sync-ok">nenhuma</span>'}</td></tr>
-        </tbody></table>
-        <div class="toolbar" style="margin-top:10px">${pend.length ? '<button class="btn orange" id="sgEsc">Escolher como juntar</button>' : ""}<button class="btn ghost" id="sgBkp">Exportar backup (.json)</button></div>`;
-      const head = root.querySelector(".pagehead, h1"); const alvo = head && head.closest(".pagehead") ? head.closest(".pagehead") : null;
-      if (alvo && alvo.nextSibling) root.insertBefore(card, alvo.nextSibling); else root.insertBefore(card, root.children[1] || null);
-      const e1 = $("#sgEsc", card); if (e1) e1.onclick = () => Cloud.askConflict(pendentes());
-      const e2 = $("#sgBkp", card); if (e2) e2.onclick = () => { baixarBackup(); ERP.toast("Backup baixado."); };
-    };
-  });
+  ERP.register({ id: "sistema", label: "Sistema", icon: "settings", group: "Sistema", pages: [{ id: "dados", label: "Dados e Sincronização", icon: "cloud", render: pDados }, { id: "glossario", label: "Glossário", icon: "info", render: pGlossario }] });
 })();
 
 </script>
