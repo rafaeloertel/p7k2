@@ -755,7 +755,7 @@ body:not(.gated)::before{display:none}
 /* Hub — núcleo: utilitários, armazenamento (local + Supabase), login Microsoft, shell, rotas, modais */
 (function () {
   "use strict";
-  const ERP = (window.ERP = { version: "v0.15.0", modules: [], defaults: {}, cfg: {} });
+  const ERP = (window.ERP = { version: "v0.15.1", modules: [], defaults: {}, cfg: {} });
 
   /* ---------- utilitários ---------- */
   const $ = (s, r) => (r || document).querySelector(s);
@@ -1234,7 +1234,7 @@ body:not(.gated)::before{display:none}
   ERP.paintTheme = function () {
     const dark = ERP.isDark();
     $$(".themebtn").forEach((b) => { const lbl = dark ? "Usar modo claro" : "Usar modo escuro"; b.innerHTML = (ERP.ic ? ERP.ic(dark ? "sun" : "moon", b.classList.contains("iconbtn") ? 20 : 16) : "") + (b.classList.contains("chip") ? `<span>${dark ? "Modo Claro" : "Modo Escuro"}</span>` : ""); b.title = lbl; b.setAttribute("aria-label", lbl); });
-    $$('meta[name="theme-color"]').forEach((m) => { m.removeAttribute("media"); m.content = dark ? "#0C1320" : "#FFFFFF"; });
+    $$('meta[name="theme-color"]').forEach((m) => { m.removeAttribute("media"); m.content = dark ? "#14171C" : "#FFFFFF"; });
   };
   if (mqDark.addEventListener) mqDark.addEventListener("change", () => { if (ERP.theme() === "auto") { ERP.paintTheme(); ERP.render(); } });
 
