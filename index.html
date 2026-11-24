@@ -730,10 +730,13 @@ body.pin-travado .app,
 body.pin-travado .gate,
 body.pin-travado .ov{display:none!important}
 body.pin-travado{overflow:hidden}
+/* mesma arte de fundo da tela de entrada: o papel de parede fica no body e o
+   painel do código é transparente por cima dele, como acontece no gate */
+body.pin-travado{background:var(--bg)}
 body.pin-travado::before{display:block}
 .pin[hidden]{display:none}
 .pin{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;padding:20px;
-  background:var(--bg);overflow:auto}
+  background:transparent;overflow:auto}
 .pin-card{width:100%;max-width:360px;text-align:center;position:relative}
 .pin-mono{display:inline-grid;place-items:center;width:52px;height:52px;margin-bottom:14px;color:var(--ink)}
 .pin-mono svg{width:52px;height:52px}
@@ -798,7 +801,7 @@ body.pin-travado::before{display:block}
 /* Hub — núcleo: utilitários, armazenamento (local + Supabase), login Microsoft, shell, rotas, modais */
 (function () {
   "use strict";
-  const ERP = (window.ERP = { version: "v0.16.0", modules: [], defaults: {}, cfg: {} });
+  const ERP = (window.ERP = { version: "v0.16.1", modules: [], defaults: {}, cfg: {} });
 
   /* ---------- utilitários ---------- */
   const $ = (s, r) => (r || document).querySelector(s);
