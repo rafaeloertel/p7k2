@@ -720,8 +720,10 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
 .kv>div:last-child{border-bottom:0}
 .kv .k{color:var(--ink-2)}.kv .v{color:var(--ink);word-break:break-word}
 @media (max-width:600px){.kv>div{grid-template-columns:1fr;gap:2px}}
-/* arte de fundo só na tela de entrada; nas telas de trabalho o fundo fica limpo */
-body:not(.gated)::before{display:none}
+/* A arte de fundo vale em todo o Hub. Nas telas de trabalho ela entra mais apagada,
+   para ser textura e não concorrer com os dados; na entrada e na trava fica cheia. */
+body:not(.gated):not(.pin-travado)::before{opacity:.55}
+@media print{body::before{display:none}}
 
 
 /* ---------- trava do app no celular: código de acesso + Face ID ---------- */
@@ -801,7 +803,7 @@ body.pin-travado::before{display:block}
 /* Hub — núcleo: utilitários, armazenamento (local + Supabase), login Microsoft, shell, rotas, modais */
 (function () {
   "use strict";
-  const ERP = (window.ERP = { version: "v0.16.1", modules: [], defaults: {}, cfg: {} });
+  const ERP = (window.ERP = { version: "v0.16.2", modules: [], defaults: {}, cfg: {} });
 
   /* ---------- utilitários ---------- */
   const $ = (s, r) => (r || document).querySelector(s);
