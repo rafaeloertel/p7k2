@@ -724,6 +724,49 @@ li.err .vg-dot{background:var(--err)} li.warn .vg-dot{background:var(--warn)} li
 body:not(.gated)::before{display:none}
 
 
+/* ---------- trava do app no celular: código de acesso + Face ID ---------- */
+/* Enquanto travado, nada do Hub fica visível: nem o app, nem a tela de entrada. */
+body.pin-travado .app,
+body.pin-travado .gate,
+body.pin-travado .ov{display:none!important}
+body.pin-travado{overflow:hidden}
+body.pin-travado::before{display:block}
+.pin[hidden]{display:none}
+.pin{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;padding:20px;
+  background:var(--bg);overflow:auto}
+.pin-card{width:100%;max-width:360px;text-align:center;position:relative}
+.pin-mono{display:inline-grid;place-items:center;width:52px;height:52px;margin-bottom:14px;color:var(--ink)}
+.pin-mono svg{width:52px;height:52px}
+.pin-card h1{font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.2;color:var(--navy)}
+.pin-card>p{color:var(--ink-2);font-size:14px;line-height:1.55;margin-top:8px}
+.pin-motivo{color:var(--ink-2);font-size:13px;line-height:1.55;margin-top:12px;text-align:left;
+  border-left:var(--geo-t) solid var(--accent);padding:10px 12px;background:var(--surface-2)}
+.pin-dots{display:flex;gap:14px;justify-content:center;margin:22px 0 6px}
+.pin-dots i{width:12px;height:12px;border:1.5px solid var(--ink-3);border-radius:999px;transition:background .12s,border-color .12s}
+.pin-dots i.on{background:var(--accent);border-color:var(--accent)}
+.pin-aviso{min-height:34px;display:flex;align-items:center;justify-content:center;
+  color:var(--neg);font-size:13px;line-height:1.4;padding:0 4px;margin:0}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+.pin-pad button{height:64px;min-height:64px;font-size:24px;font-weight:600;color:var(--ink);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);
+  cursor:pointer;display:grid;place-items:center;gap:2px;-webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;user-select:none}
+.pin-pad button:active{background:var(--accent-soft);border-color:var(--accent-line)}
+.pin-pad button[data-k="bio"]{font-size:13px;color:var(--accent)}
+.pin-pad button[data-k="bio"] small{font-size:11px;font-weight:600}
+.pin-pad button[data-k="apagar"]{font-size:22px;color:var(--ink-2)}
+.pin-foot{display:flex;gap:18px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.pin-foot .lnk{background:0;border:0;padding:4px;color:var(--ink-2);font-size:13px;
+  text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.pin-foot .lnk:hover{color:var(--accent)}
+.pin-act{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+@media (max-height:680px){
+  .pin-mono,.pin-mono svg{width:40px;height:40px}
+  .pin-dots{margin:16px 0 4px}
+  .pin-pad{gap:9px}
+  .pin-pad button{height:58px;min-height:58px}
+}
+
 </style>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -755,7 +798,7 @@ body:not(.gated)::before{display:none}
 /* Hub — núcleo: utilitários, armazenamento (local + Supabase), login Microsoft, shell, rotas, modais */
 (function () {
   "use strict";
-  const ERP = (window.ERP = { version: "v0.15.1", modules: [], defaults: {}, cfg: {} });
+  const ERP = (window.ERP = { version: "v0.16.0", modules: [], defaults: {}, cfg: {} });
 
   /* ---------- utilitários ---------- */
   const $ = (s, r) => (r || document).querySelector(s);
@@ -1034,6 +1077,8 @@ body:not(.gated)::before{display:none}
         const em = this.email(), u = lsGet("user", null);
         if (u && u !== em) { if (Store.names().some((n) => temDados(n))) try { baixarBackup("conta-anterior"); } catch (e) {} Store.names().forEach((n) => { try { localStorage.removeItem(PREFIX + "doc." + n); localStorage.removeItem(PREFIX + "meta." + n); } catch (e) {} }); Store.load(); }
         lsSet("user", em);
+        /* trava do celular antes de a tela do app aparecer, para não piscar o conteúdo */
+        try { if (ERP.PIN) ERP.PIN.aoEntrar(em); } catch (e) { console.error(e); }
         ERP.gate(null); this.setStatus("busy", "Sincronizando…");
         await this.pullAll();
       } catch (e) { console.error(e); this.setStatus("err", "Erro de login"); ERP.gate("erro", e.message || String(e)); }
@@ -1461,6 +1506,368 @@ body:not(.gated)::before{display:none}
     try { if ("serviceWorker" in navigator && location.protocol === "https:" && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register("sw.js"); } catch (e) {}   /* app instalável (PWA) */
     await Cloud.init();
   };
+})();
+
+</script>
+<script>/* js/pin.js */
+/* Trava do app no celular: código de 6 dígitos + Face ID / biometria do aparelho.
+   Portado do ERP NMB (v0.14.87 e v0.14.88) e adaptado ao Hub (Supabase no lugar do MSAL).
+
+   O que ela é: uma trava de tela do aplicativo, feita no navegador, para o caso de
+   perder o celular desbloqueado. O que ela NÃO é: segurança da conta. Em caso de roubo,
+   o primeiro passo continua sendo encerrar as sessões da conta Microsoft e apagar o
+   aparelho à distância. O código vale por aparelho e nunca sai dele. */
+(function () {
+  "use strict";
+  const { $, $$, esc } = ERP;
+  const lsGet = ERP.lsGet, lsSet = ERP.lsSet;
+
+  const MINUTOS = 5;                 /* tempo fora da tela que faz travar de novo */
+  const ESPERA = MINUTOS * 60 * 1000;
+  const ERROS_MAX = 5;
+  const VOLTAS = 150000;             /* PBKDF2-SHA-256 */
+  const DIGITOS = 6;
+
+  const PIN = (ERP.PIN = {
+    travado: false,
+    modo: null,        /* criar | confirmar | bio | travado | atual | null */
+    buf: "",
+    primeiro: "",      /* primeira digitação, na criação */
+    erros: 0,
+    email: "",
+    motivo: "",        /* por que a biometria não ativou */
+    aviso: "",
+    forcar: null,      /* bancada: força considerar celular (true) ou não (false) */
+    escondidoEm: 0,
+  });
+
+  /* ---------- utilidades ---------- */
+  const b64e = (u8) => btoa(String.fromCharCode.apply(null, Array.from(u8)));
+  const b64d = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+
+  function ehCelular() {
+    if (PIN.forcar != null) return !!PIN.forcar;
+    const toque = (navigator.maxTouchPoints || 0) > 0 || "ontouchstart" in window;
+    const s = window.screen || {};
+    const lado = Math.min(s.width || window.innerWidth, s.height || window.innerHeight);
+    return toque && lado <= 820;
+  }
+  PIN.ehCelular = ehCelular;
+
+  const chave = (email) => "pin." + String(email || "").toLowerCase();
+  const ler = (email) => lsGet(chave(email), null);
+  const gravar = (email, v) => lsSet(chave(email), v);
+  const apagar = (email) => { try { localStorage.removeItem("erp.rafael." + chave(email)); } catch (e) {} };
+
+  PIN.temCodigo = (email) => !!ler(email || PIN.email);
+  PIN.temBio = (email) => { const r = ler(email || PIN.email); return !!(r && r.bio && r.bio.id); };
+  PIN.dispensado = () => !!lsGet("pin.dispensado", false);
+
+  /* códigos óbvios: seis iguais, sequência crescente ou decrescente */
+  function obvio(c) {
+    if (/^(\d)\1{5}$/.test(c)) return true;
+    let sobe = true, desce = true;
+    for (let i = 1; i < c.length; i++) {
+      if (+c[i] !== +c[i - 1] + 1) sobe = false;
+      if (+c[i] !== +c[i - 1] - 1) desce = false;
+    }
+    return sobe || desce;
+  }
+  PIN._obvio = obvio;
+
+  async function derivar(codigo, saltB64, voltas) {
+    const enc = new TextEncoder();
+    const base = await crypto.subtle.importKey("raw", enc.encode(codigo), "PBKDF2", false, ["deriveBits"]);
+    const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: b64d(saltB64), iterations: voltas, hash: "SHA-256" }, base, 256);
+    return b64e(new Uint8Array(bits));
+  }
+
+  async function guardarCodigo(email, codigo, bio) {
+    const salt = b64e(crypto.getRandomValues(new Uint8Array(16)));
+    const hash = await derivar(codigo, salt, VOLTAS);
+    gravar(email, { salt, hash, voltas: VOLTAS, bio: bio || null, criado: new Date().toISOString() });
+  }
+
+  async function confere(email, codigo) {
+    const r = ler(email); if (!r) return false;
+    const h = await derivar(codigo, r.salt, r.voltas || VOLTAS);
+    /* comparação de tempo constante */
+    if (h.length !== r.hash.length) return false;
+    let d = 0; for (let i = 0; i < h.length; i++) d |= h.charCodeAt(i) ^ r.hash.charCodeAt(i);
+    return d === 0;
+  }
+  PIN._confere = confere;
+
+  /* ---------- biometria (WebAuthn, autenticador do próprio aparelho) ---------- */
+  async function bioDisponivel() {
+    try {
+      if (!window.PublicKeyCredential || !navigator.credentials) return false;
+      if (!PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) return false;
+      return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    } catch (e) { return false; }
+  }
+  PIN.bioDisponivel = bioDisponivel;
+
+  function motivoDe(e) {
+    const n = (e && e.name) || "";
+    if (n === "NotAllowedError") return "O aparelho recusou ou a operação foi cancelada. No iPhone, confira em Ajustes › [seu nome] › iCloud › Senhas e Chaves se está ligado, e se o Face ID está ativo para o Safari.";
+    if (n === "NotSupportedError" || n === "AbortError") return "Este aparelho ou navegador não oferece Face ID / digital para sites.";
+    if (n === "SecurityError") return "O endereço aberto não confere com o do Hub. Abra pelo atalho do Hub, em https.";
+    if (n === "InvalidStateError") return "Já existe uma chave deste aparelho para o Hub. Apague a chave antiga nas senhas do aparelho e tente de novo.";
+    if (n === "ConstraintError") return "O aparelho não conseguiu exigir a verificação do usuário (Face ID, Touch ID ou senha do aparelho).";
+    return "Não foi possível ativar agora" + (n ? " (" + n + ")" : "") + ".";
+  }
+
+  async function bioCriar(email) {
+    const enc = new TextEncoder();
+    const cred = await navigator.credentials.create({
+      publicKey: {
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        rp: { name: "Hub", id: location.hostname },
+        user: { id: enc.encode(("u-" + email).slice(0, 64)), name: email, displayName: email },
+        pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+        authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required", residentKey: "preferred" },
+        timeout: 60000,
+        attestation: "none",
+      },
+    });
+    if (!cred) throw new Error("sem credencial");
+    return { id: b64e(new Uint8Array(cred.rawId)), em: new Date().toISOString() };
+  }
+
+  async function bioUsar(email) {
+    const r = ler(email);
+    if (!r || !r.bio || !r.bio.id) throw new Error("sem biometria");
+    const cred = await navigator.credentials.get({
+      publicKey: {
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        rpId: location.hostname,
+        allowCredentials: [{ type: "public-key", id: b64d(r.bio.id), transports: ["internal"] }],
+        userVerification: "required",
+        timeout: 60000,
+      },
+    });
+    if (!cred) throw new Error("sem resposta");
+    return true;
+  }
+
+  /* Ativar a biometria a qualquer hora, sem trocar o código (v0.14.88 do ERP). */
+  PIN.ativarBio = async function () {
+    const email = PIN.email || (ERP.Cloud.email && ERP.Cloud.email()) || "";
+    const r = ler(email);
+    if (!r) { ERP.toast("Crie o código de acesso primeiro."); return false; }
+    if (!(await bioDisponivel())) { PIN.motivo = "Este aparelho ou navegador não oferece Face ID / digital para sites."; ERP.toast(PIN.motivo); return false; }
+    try {
+      const bio = await bioCriar(email);
+      r.bio = bio; gravar(email, r); PIN.motivo = "";
+      ERP.toast("Face ID ativado neste aparelho.");
+      ERP.render();
+      return true;
+    } catch (e) {
+      PIN.motivo = motivoDe(e);
+      ERP.toast(PIN.motivo);
+      ERP.render();
+      return false;
+    }
+  };
+
+  PIN.removerBio = function () {
+    const email = PIN.email || (ERP.Cloud.email && ERP.Cloud.email()) || "";
+    const r = ler(email); if (!r) return;
+    r.bio = null; gravar(email, r); PIN.motivo = "";
+    ERP.toast("Face ID desativado neste aparelho."); ERP.render();
+  };
+
+  /* ---------- tela ---------- */
+  function caixa() {
+    let el = $("#pinTela");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "pinTela";
+      el.className = "pin";
+      el.setAttribute("role", "dialog");
+      el.setAttribute("aria-modal", "true");
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+
+  const TEXTOS = {
+    criar: ["Criar o código de acesso", "Seis números que destravam o Hub neste aparelho."],
+    confirmar: ["Repita o código", "Digite os mesmos seis números."],
+    atual: ["Código atual", "Digite o código que você usa hoje."],
+    travado: ["Hub bloqueado", ""],
+    bio: ["Usar o Face ID?", "Assim você destrava sem digitar o código. O código continua valendo como reserva."],
+  };
+
+  function desenhar() {
+    const el = caixa();
+    const m = PIN.modo;
+    if (!m) { el.hidden = true; document.body.classList.remove("pin-travado"); return; }
+    el.hidden = false;
+    document.body.classList.add("pin-travado");
+
+    const marca = (($(".brand .mono svg") || {}).outerHTML) || "";
+    const t = TEXTOS[m] || ["", ""];
+
+    if (m === "bio") {
+      el.innerHTML = `<div class="pin-card">
+        <span class="pin-mono">${marca}</span>
+        <h1>${t[0]}</h1><p>${t[1]}</p>
+        ${PIN.motivo ? `<p class="pin-motivo">${esc(PIN.motivo)}</p>` : ""}
+        <div class="pin-act">
+          <button class="btn orange lg" id="pinBioSim">Ativar Face ID</button>
+          <button class="btn ghost lg" id="pinBioNao">Agora Não</button>
+        </div></div>`;
+      $("#pinBioSim", el).onclick = async () => {
+        const bt = $("#pinBioSim", el); bt.disabled = true; bt.textContent = "Aguardando o aparelho…";
+        const ok = await PIN.ativarBio();
+        if (ok) PIN.liberar(); else desenhar();
+      };
+      $("#pinBioNao", el).onclick = () => PIN.liberar();
+      return;
+    }
+
+    const pontos = Array.from({ length: DIGITOS }, (_, i) => `<i class="${i < PIN.buf.length ? "on" : ""}"></i>`).join("");
+    const bio = m === "travado" && PIN.temBio();
+    const teclas = ["1", "2", "3", "4", "5", "6", "7", "8", "9", bio ? "bio" : "", "0", "apagar"];
+
+    el.innerHTML = `<div class="pin-card">
+      <span class="pin-mono">${marca}</span>
+      <h1>${t[0]}</h1>${t[1] ? `<p>${t[1]}</p>` : ""}
+      <div class="pin-dots" aria-hidden="true">${pontos}</div>
+      <p class="pin-aviso" role="status">${esc(PIN.aviso || "")}</p>
+      <div class="pin-pad">${teclas.map((k) => {
+        if (k === "") return `<span></span>`;
+        if (k === "bio") return `<button type="button" data-k="bio" aria-label="Usar o Face ID">${ERP.ic ? ERP.ic("user", 22) : ""}<small>Face ID</small></button>`;
+        if (k === "apagar") return `<button type="button" data-k="apagar" aria-label="Apagar o último número">←</button>`;
+        return `<button type="button" data-k="${k}">${k}</button>`;
+      }).join("")}</div>
+      <div class="pin-foot">${m === "travado"
+        ? `<button class="lnk" id="pinEsqueci">Esqueci o código</button><button class="lnk" id="pinSair">Sair da conta</button>`
+        : `<button class="lnk" id="pinCancelar">Cancelar</button>`}</div>
+    </div>`;
+
+    $$(".pin-pad button", el).forEach((b) => (b.onclick = () => tecla(b.dataset.k)));
+    const es = $("#pinEsqueci", el); if (es) es.onclick = () => PIN.expulsar("Código apagado. Entre de novo com a sua conta Microsoft.");
+    const sa = $("#pinSair", el); if (sa) sa.onclick = () => PIN.expulsar("");
+    const ca = $("#pinCancelar", el); if (ca) ca.onclick = () => PIN.cancelar();
+  }
+  PIN.desenhar = desenhar;
+
+  function tecla(k) {
+    if (k === "bio") { tentarBio(); return; }
+    if (k === "apagar") { PIN.buf = PIN.buf.slice(0, -1); PIN.aviso = ""; desenhar(); return; }
+    if (!/^\d$/.test(k) || PIN.buf.length >= DIGITOS) return;
+    PIN.buf += k; PIN.aviso = ""; desenhar();
+    if (PIN.buf.length === DIGITOS) setTimeout(completo, 120);
+  }
+  PIN.tecla = tecla;
+
+  async function completo() {
+    const c = PIN.buf;
+    if (PIN.modo === "criar") {
+      if (obvio(c)) { PIN.buf = ""; PIN.aviso = "Esse código é fácil demais. Evite números iguais ou em sequência."; desenhar(); return; }
+      PIN.primeiro = c; PIN.buf = ""; PIN.modo = "confirmar"; PIN.aviso = ""; desenhar(); return;
+    }
+    if (PIN.modo === "confirmar") {
+      if (c !== PIN.primeiro) { PIN.buf = ""; PIN.primeiro = ""; PIN.modo = "criar"; PIN.aviso = "Os códigos não bateram. Comece de novo."; desenhar(); return; }
+      await guardarCodigo(PIN.email, c, ler(PIN.email) && ler(PIN.email).bio);
+      PIN.buf = ""; PIN.primeiro = ""; PIN.aviso = "";
+      try { lsSet("pin.dispensado", false); } catch (e) {}
+      if (!PIN.temBio() && (await bioDisponivel())) { PIN.modo = "bio"; desenhar(); }
+      else { ERP.toast("Código de acesso criado."); PIN.liberar(); }
+      return;
+    }
+    if (PIN.modo === "atual") {
+      if (!(await confere(PIN.email, c))) { PIN.buf = ""; PIN.aviso = "Código errado."; desenhar(); return; }
+      PIN.buf = ""; PIN.modo = "criar"; PIN.aviso = ""; desenhar(); return;
+    }
+    if (PIN.modo === "travado") {
+      if (await confere(PIN.email, c)) { PIN.erros = 0; PIN.buf = ""; PIN.aviso = ""; PIN.liberar(); return; }
+      PIN.erros++; PIN.buf = "";
+      const resta = ERROS_MAX - PIN.erros;
+      if (resta <= 0) { PIN.expulsar("Cinco erros seguidos: o código foi apagado e a conta foi desconectada neste aparelho."); return; }
+      PIN.aviso = resta === 1 ? "Código errado. Resta 1 tentativa antes de a conta sair deste aparelho." : `Código errado. Restam ${resta} tentativas.`;
+      desenhar();
+    }
+  }
+
+  async function tentarBio() {
+    try { await bioUsar(PIN.email); PIN.erros = 0; PIN.buf = ""; PIN.aviso = ""; PIN.liberar(); }
+    catch (e) { PIN.aviso = "Face ID não confirmou. Use o código."; desenhar(); }
+  }
+
+  /* ---------- entradas e saídas ---------- */
+  PIN.travar = function () {
+    if (!PIN.email || !PIN.temCodigo()) return false;
+    PIN.travado = true; PIN.modo = "travado"; PIN.buf = ""; PIN.aviso = "";
+    desenhar();
+    if (PIN.temBio()) setTimeout(() => { if (PIN.modo === "travado") tentarBio(); }, 250);
+    return true;
+  };
+
+  PIN.liberar = function () {
+    PIN.travado = false; PIN.modo = null; PIN.buf = ""; PIN.primeiro = "";
+    document.body.classList.remove("pin-travado");
+    const el = $("#pinTela"); if (el) el.hidden = true;
+    PIN.escondidoEm = 0;
+  };
+
+  PIN.cancelar = function () {
+    /* cancelar só existe fora da trava: volta ao app sem mudar nada */
+    PIN.buf = ""; PIN.primeiro = ""; PIN.aviso = "";
+    if (PIN.travado) { PIN.modo = "travado"; desenhar(); return; }
+    PIN.liberar(); ERP.render();
+  };
+
+  PIN.expulsar = function (msg) {
+    apagar(PIN.email);
+    PIN.liberar(); PIN.erros = 0;
+    if (msg) { try { ERP.toast(msg); } catch (e) {} }
+    try { ERP.Cloud.logout(); } catch (e) { location.reload(); }
+  };
+
+  /* chamado pelo núcleo assim que a sessão é aceita, antes de a tela do app aparecer */
+  PIN.aoEntrar = function (email) {
+    PIN.email = String(email || "").toLowerCase();
+    if (!ehCelular() || !PIN.email) return;
+    if (PIN.temCodigo()) { PIN.travar(); return; }
+    if (PIN.dispensado()) return;
+    PIN.modo = "criar"; PIN.buf = ""; PIN.primeiro = ""; PIN.aviso = "";
+    desenhar();
+  };
+
+  /* pedir a criação de propósito (botão em Sistema) */
+  PIN.criar = function () {
+    PIN.email = PIN.email || (ERP.Cloud.email && ERP.Cloud.email()) || "";
+    if (!PIN.email) { ERP.toast("Entre com a sua conta primeiro."); return; }
+    PIN.modo = "criar"; PIN.buf = ""; PIN.primeiro = ""; PIN.aviso = ""; desenhar();
+  };
+
+  PIN.trocar = function () {
+    PIN.email = PIN.email || (ERP.Cloud.email && ERP.Cloud.email()) || "";
+    if (!PIN.temCodigo()) { PIN.criar(); return; }
+    PIN.modo = "atual"; PIN.buf = ""; PIN.primeiro = ""; PIN.aviso = ""; desenhar();
+  };
+
+  PIN.remover = async function () {
+    if (!(await ERP.confirm("Remover o código de acesso deste aparelho? Quem pegar o celular desbloqueado passa a abrir o Hub direto.", "Remover"))) return;
+    apagar(PIN.email); lsSet("pin.dispensado", true);
+    ERP.toast("Código removido neste aparelho."); ERP.render();
+  };
+
+  /* trava de novo depois de MINUTOS fora da tela */
+  document.addEventListener("visibilitychange", () => {
+    if (!PIN.email || !PIN.temCodigo() || !ehCelular()) return;
+    if (document.visibilityState === "hidden") { PIN.escondidoEm = Date.now(); return; }
+    if (PIN.travado) return;
+    if (PIN.escondidoEm && Date.now() - PIN.escondidoEm > ESPERA) PIN.travar();
+    PIN.escondidoEm = 0;
+  });
+
+  PIN.MINUTOS = MINUTOS;
+  PIN.ERROS_MAX = ERROS_MAX;
 })();
 
 </script>
@@ -4090,6 +4497,28 @@ body:not(.gated)::before{display:none}
     r.readAsText(file);
   }
 
+  /* Bloqueio do app: código de 6 dígitos + Face ID, só no celular e só neste aparelho. */
+  function cartaoTrava() {
+    const P = ERP.PIN; if (!P) return "";
+    const cel = P.ehCelular(), tem = P.temCodigo(), bio = P.temBio();
+    const estado = !cel ? `<span class="pill">não se aplica a este aparelho</span>`
+      : tem ? `<span class="pill ok">código ativo${bio ? " · Face ID ativo" : ""}</span>`
+        : `<span class="pill warn">sem código</span>`;
+    return `<div class="card"><h3>Bloqueio do App</h3>
+      <div class="kv"><div><span class="k">Neste aparelho</span><span class="v">${estado}</span></div></div>
+      <p class="mut" style="margin-top:10px">Um código de seis números pedido ao abrir o Hub no celular e ao voltar depois de ${P.MINUTOS} minutos fora da tela, com Face ID ou digital se o aparelho tiver. Serve para o caso de perder o celular desbloqueado. O código fica só neste aparelho, embaralhado, e nunca vai para a nuvem.</p>
+      ${cel ? `<div class="toolbar" style="margin-top:12px">
+          ${tem ? `<button class="btn ghost" id="pnTroc">Trocar o Código</button>` : `<button class="btn orange" id="pnCria">Criar o Código</button>`}
+          ${tem && !bio ? `<button class="btn ghost" id="pnBio">Ativar Face ID / Biometria</button>` : ""}
+          ${tem && bio ? `<button class="btn ghost" id="pnBioOff">Desativar Face ID</button>` : ""}
+          ${tem ? `<button class="btn danger" id="pnRem">Remover o Código</button>` : ""}
+        </div>
+        ${P.motivo ? `<p class="mut" style="font-size:12.5px;margin-top:10px">${esc(P.motivo)}</p>` : ""}`
+      : `<p class="mut" style="font-size:12.5px;margin-top:10px">A trava vale por aparelho e só aparece no celular. Neste computador nada muda.</p>`}
+      <p class="mut" style="font-size:12.5px;margin-top:10px">É uma trava do aplicativo, não da sua conta. Se o celular for roubado, o primeiro passo continua sendo encerrar as sessões da conta Microsoft, trocar a senha e apagar o aparelho à distância.</p>
+    </div>`;
+  }
+
   function pDados(root) {
     const logado = !!Cloud.account;
     const u = Cloud.ultimoSalvamento ? Cloud.ultimoSalvamento() : null;
@@ -4120,6 +4549,7 @@ body:not(.gated)::before{display:none}
         <div class="toolbar"><button class="btn ghost" id="bExp">Exportar Backup (.json)</button><label class="btn ghost" style="cursor:pointer">Restaurar e Juntar<input type="file" accept=".json,application/json" id="iMerge" hidden></label><label class="btn ghost" style="cursor:pointer">Restaurar e Substituir<input type="file" accept=".json,application/json" id="iRep" hidden></label></div>
       </div>
       <div class="card"><h3>Dados de Exemplo</h3><p class="mut" style="margin-bottom:10px">Para conhecer Finanças com números: carrega uma conta, um cartão, recorrências, compras, um empréstimo e uma meta, todos marcados como exemplo. Remover apaga só eles.</p><div class="toolbar">${ERP.temExemplo() ? `<button class="btn ghost" id="exRem">Remover Exemplos</button>` : `<button class="btn ghost" id="exAdd">Carregar Exemplo</button>`}</div></div>
+      ${logado ? cartaoTrava() : ""}
       <div class="card"><h3>Aparência</h3><p class="mut" style="margin-bottom:12px">O padrão é o modo claro. Escolha Escuro, ou Automático para seguir o modo do aparelho. O botão de lua/sol no menu alterna na hora.</p><div class="tabs" id="aTheme" style="margin:0">${[["light", "Claro"], ["dark", "Escuro"], ["auto", "Automático"]].map(([k, n]) => `<button data-th="${k}" class="${ERP.theme() === k ? "on" : ""}">${n}</button>`).join("")}</div></div>
       <div class="card"><h3>Sobre</h3><p>Hub ${esc(ERP.version)} · módulos: ${ERP.modules.map((m) => esc(m.label)).join(", ")}.</p><p class="mut" style="margin-top:6px">Página instalável (PWA). Dados na nuvem via Supabase; login Microsoft. O código no GitHub é público e não contém dados.</p></div>`;
     $("#aTheme", root).onclick = (e) => { const b = e.target.closest("[data-th]"); if (b) ERP.setTheme(b.dataset.th); };
@@ -4129,6 +4559,14 @@ body:not(.gated)::before{display:none}
     const e1 = $("#sgEsc", root); if (e1) e1.onclick = () => Cloud.askConflict(ERP.syncPendentes());
     const ea = $("#exAdd", root); if (ea) ea.onclick = () => ERP.finExemplo();
     const er = $("#exRem", root); if (er) er.onclick = () => ERP.confirm("Remover todos os dados de exemplo?", "Remover").then((ok) => ok && ERP.finRemoverExemplo());
+    const P = ERP.PIN;
+    if (P) {
+      const pc = $("#pnCria", root); if (pc) pc.onclick = () => P.criar();
+      const pt = $("#pnTroc", root); if (pt) pt.onclick = () => P.trocar();
+      const pb = $("#pnBio", root); if (pb) pb.onclick = () => { pb.disabled = true; pb.textContent = "Aguardando o aparelho…"; P.ativarBio(); };
+      const pf = $("#pnBioOff", root); if (pf) pf.onclick = () => P.removerBio();
+      const pr = $("#pnRem", root); if (pr) pr.onclick = () => P.remover();
+    }
     $("#bExp", root).onclick = () => { Cloud.exportarBackup(); ERP.toast("Backup baixado."); };
     $("#iMerge", root).onchange = (e) => e.target.files[0] && importFile(e.target.files[0], "merge");
     $("#iRep", root).onchange = (e) => e.target.files[0] && importFile(e.target.files[0], "replace");
