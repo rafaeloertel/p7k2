@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14171C" media="(prefers-color-scheme: dark)">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hub">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Hub</title>
+<script>try{var t=JSON.parse(localStorage.getItem("erp.rafael.theme")||"\"\"");if(t!=="auto")document.documentElement.dataset.theme=(t==="dark"?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/app.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+</head>
+<body>
+<div class="gate" id="gate" role="main" hidden></div>
+<div class="app">
+  <header class="topbar" id="topbar">
+    <button class="iconbtn sidetgl" type="button" id="sideTgl" aria-label="Mostrar ou ocultar o menu lateral" title="Mostrar ou ocultar o menu lateral"><span class="ham"><i></i><i></i><i></i></span></button>
+    <a class="brand" href="#/inicio"><span class="mono"><svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><line x1="32" y1="32" x2="13" y2="13"/><line x1="32" y1="32" x2="51" y2="13"/><line x1="32" y1="32" x2="13" y2="51"/><line x1="32" y1="32" x2="51" y2="51"/></g><rect x="25" y="25" width="14" height="14" fill="currentColor"/><rect x="8" y="8" width="10" height="10" fill="currentColor"/><rect x="8" y="46" width="10" height="10" fill="currentColor"/><rect x="46" y="46" width="10" height="10" fill="currentColor"/><rect x="46" y="8" width="10" height="10" style="fill:var(--accent)"/></svg></span><span class="brand-t"><b>Hub</b></span></a>
+    <b id="mTitle">Hub</b>
+    <nav class="topnav" id="nav" aria-label="Módulos"></nav>
+    <span class="sp"></span>
+    <button class="chip sync" title="Dados e Sincronização"><i></i><span>Carregando…</span></button>
+    <button class="iconbtn themebtn" type="button"></button>
+    <a class="iconbtn" id="navSis" href="#/sistema" aria-label="Sistema" title="Sistema"></a>
+    <button class="iconbtn outbtn" type="button" id="navOut" aria-label="Sair da Conta" title="Sair da Conta" hidden></button>
+  </header>
+  <div class="body">
+    <aside class="side" id="side" aria-label="Menu do módulo"><nav class="sidenav" id="sidenav"></nav><div class="side-foot"><a href="#/sistema" id="sideSis"></a><div class="side-ver"><span id="brandVer"></span></div></div></aside>
+    <main id="main"></main>
+  </div>
+  <nav class="tabbar" id="tabbar" aria-label="Módulos"></nav>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<script src="assets/supabase.js"></script>
+<script src="js/core.js"></script>
+<script src="js/pin.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/ui-controls.js"></script>
+<script src="js/mod-inicio.js"></script>
+<script src="js/mod-reminders.js"></script>
+<script src="js/fin-modelo.js"></script>
+<script src="js/mod-financas.js"></script>
+<script src="js/fin-painel.js"></script>
+<script src="js/fin-importar.js"></script>
+<script src="js/fin-visoes.js"></script>
+<script src="js/mod-investimentos.js"></script>
+<script src="js/mod-patrimonio.js"></script>
+<script src="js/mod-sistema.js"></script>
+<script>ERP.boot();</script>
+</body>
+</html>

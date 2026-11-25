@@ -803,7 +803,7 @@ body.pin-travado::before{display:block}
 /* Hub — núcleo: utilitários, armazenamento (local + Supabase), login Microsoft, shell, rotas, modais */
 (function () {
   "use strict";
-  const ERP = (window.ERP = { version: "v0.16.2", modules: [], defaults: {}, cfg: {} });
+  const ERP = (window.ERP = { version: "v0.16.3", modules: [], defaults: {}, cfg: {} });
 
   /* ---------- utilitários ---------- */
   const $ = (s, r) => (r || document).querySelector(s);
@@ -1078,6 +1078,8 @@ body.pin-travado::before{display:block}
         sb.auth.onAuthStateChange((evt) => { if (evt === "SIGNED_OUT") this.setAccount(null); });
         if (!session) { this.setAccount(null); this.setStatus("local", "Entrar para sincronizar"); ERP.gate("login"); return; }
         this.setAccount(session.user);
+        /* entrou com a senha depois de uma expulsão da trava: o login volta ao normal */
+        try { localStorage.removeItem(LS("reauth")); } catch (e) {}
         /* trocou de conta neste navegador: guarda cópia do que havia e começa limpo */
         const em = this.email(), u = lsGet("user", null);
         if (u && u !== em) { if (Store.names().some((n) => temDados(n))) try { baixarBackup("conta-anterior"); } catch (e) {} Store.names().forEach((n) => { try { localStorage.removeItem(PREFIX + "doc." + n); localStorage.removeItem(PREFIX + "meta." + n); } catch (e) {} }); Store.load(); }
@@ -1088,7 +1090,7 @@ body.pin-travado::before{display:block}
         await this.pullAll();
       } catch (e) { console.error(e); this.setStatus("err", "Erro de login"); ERP.gate("erro", e.message || String(e)); }
     },
-    async login() { try { await sbClient().auth.signInWithOAuth({ provider: "azure", options: { scopes: "openid email profile", redirectTo: this.redirectUri() } }); } catch (e) { toast("Não foi possível iniciar o login: " + e.message); } },
+    async login() { try { const options = { scopes: "openid email profile", redirectTo: this.redirectUri() }; if (lsGet("reauth", false)) options.queryParams = { prompt: "login" }; await sbClient().auth.signInWithOAuth({ provider: "azure", options }); } catch (e) { toast("Não foi possível iniciar o login: " + e.message); } },
     async logout() { try { await sbClient().auth.signOut(); } catch (e) {} try { lsSet("user", null); } catch (e) {} location.reload(); },
     async token() { const { data } = await sbClient().auth.getSession(); return data && data.session ? data.session.access_token : null; },
 
@@ -1828,6 +1830,8 @@ body.pin-travado::before{display:block}
 
   PIN.expulsar = function (msg) {
     apagar(PIN.email);
+    /* o próximo "Entrar com Microsoft" tem de pedir a senha: sair do app não desloga a conta no Safari */
+    lsSet("reauth", true);
     PIN.liberar(); PIN.erros = 0;
     if (msg) { try { ERP.toast(msg); } catch (e) {} }
     try { ERP.Cloud.logout(); } catch (e) { location.reload(); }
