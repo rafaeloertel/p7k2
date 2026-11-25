@@ -1,0 +1,82 @@
+# Hub — manter o banco da Supabase acordado.
+#
+# O plano gratuito pausa projetos com pouca atividade de banco num período de
+# 7 dias. Esta rotina faz uma consulta real ao banco todo dia, o que mantém o
+# projeto acordado mesmo que o Hub fique semanas sem ser aberto.
+#
+# Ela também se mantém viva sozinha: o GitHub desativa rotinas agendadas em
+# repositório sem atividade por 60 dias, então, se o último commit passar de
+# 45 dias, ela grava a data num arquivo e faz um commit, zerando essa contagem.
+#
+# Se o banco não responder, a rotina falha de propósito e o GitHub manda um
+# e-mail — ou seja, ela também serve de alarme caso o projeto pause mesmo assim.
+
+name: Manter o banco acordado
+
+on:
+  schedule:
+    - cron: "17 9 * * *" # 06:17 em Brasília (o GitHub agenda em UTC)
+  workflow_dispatch: # permite rodar à mão pelo botão "Run workflow"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: manter-acordado
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Consultar o banco
+        env:
+          # Chave publicável: é a mesma que já está no index.html do site.
+          # Pode ficar aqui — quem protege os dados é a política RLS, que só
+          # entrega linhas a quem está logado. Sozinha, ela não lê nada de ninguém.
+          SB_URL: https://jglagrayubmcupmnobfe.supabase.co
+          SB_KEY: sb_publishable_8bWnCJoiMhPdV-jW2XDvPQ_s0UvTOcN
+        run: |
+          set -u
+          codigo=$(curl -sS --max-time 30 \
+            -o /tmp/resposta.txt -w "%{http_code}" \
+            -H "apikey: ${SB_KEY}" \
+            -H "Authorization: Bearer ${SB_KEY}" \
+            "${SB_URL}/rest/v1/docs?select=name&limit=1" || echo "000")
+
+          echo "HTTP ${codigo}"
+          echo "Resposta: $(head -c 200 /tmp/resposta.txt)"
+
+          # 200 com lista vazia é o esperado: a consulta chegou ao banco e a
+          # política RLS não devolveu nada, porque ninguém está logado aqui.
+          if [ "${codigo}" = "200" ]; then
+            echo "Banco acordado."
+            exit 0
+          fi
+
+          echo "::error::O banco não respondeu 200 (veio ${codigo}). O projeto pode ter sido pausado: abra o painel da Supabase e clique em Resume project."
+          exit 1
+
+      - name: Renovar a atividade do repositório
+        run: |
+          set -eu
+          ultimo=$(git log -1 --format=%ct)
+          agora=$(date +%s)
+          dias=$(( (agora - ultimo) / 86400 ))
+          echo "Último commit há ${dias} dia(s)."
+
+          if [ "${dias}" -lt 45 ]; then
+            echo "Abaixo de 45 dias: nada a fazer."
+            exit 0
+          fi
+
+          mkdir -p .github
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .github/ultimo-ping.txt
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/ultimo-ping.txt
+          git commit -m "Manutenção: renova a atividade do repositório"
+          git push
+          echo "Commit feito: a contagem dos 60 dias voltou a zero."
